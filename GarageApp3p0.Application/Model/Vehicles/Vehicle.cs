@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GarageApp3p0.Application.Model;
+using System.Collections;
 
 namespace GarageApp3p0.Model.Vehicles
 {
-    public abstract class Vehicle
+    public abstract class Vehicle// : IEnumerable<Vehicle>
     {
         public string Make { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
@@ -24,5 +23,15 @@ namespace GarageApp3p0.Model.Vehicles
             return $"Make: {Make}, Model: {Model}, RegNumber: " +
                 $"{RegNumber}, Year: {Year}, Color: {Color}";
         }
+
+        //public IEnumerator<Vehicle> GetEnumerator()
+        //{
+        //    return new List<Vehicle> { this }.GetEnumerator();
+        //}
+
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return GetEnumerator();
+        //}
     }
 }

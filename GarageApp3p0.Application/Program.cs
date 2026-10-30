@@ -1,4 +1,5 @@
-﻿using GarageApp3p0.Model.Vehicles;
+﻿using GarageApp3p0.Model;
+using GarageApp3p0.Model.Vehicles;
 
 namespace GarageApp3p0.Application
 {
@@ -6,8 +7,9 @@ namespace GarageApp3p0.Application
     {
         static void Main(string[] args)
         {
-            Car car = new Car("Toyota", "Corolla", "ABC123", 2020, "Blue");
-            Console.WriteLine(car);
+            Garage<Vehicle> garage = Utilities.WelcomeSequennce();
+
+            Utilities.PrintMainMenu();
         }
     }
 }

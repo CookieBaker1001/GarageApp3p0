@@ -43,6 +43,13 @@ namespace GarageApp3p0.Model
             _vehicles.Add(vehicle);
         }
 
+        public void RemoveVehicle(int index)
+        {
+            if (index < 0 || index >= _vehicles.Count)
+                throw new ArgumentOutOfRangeException("Index is out of bounds.");
+            _vehicles.RemoveAt(index);
+        }
+
         public void RemoveVehicle(T vehicle)
         {
             _vehicles.Remove(vehicle);

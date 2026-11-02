@@ -1,5 +1,6 @@
 ﻿using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
+using System.Diagnostics.Metrics;
 
 namespace GarageApp3p0.Application
 {
@@ -7,7 +8,7 @@ namespace GarageApp3p0.Application
     {
         static void Main(string[] args)
         {
-            Garage<Vehicle> garage = Utilities.WelcomeSequennce();
+            Garage<Vehicle> garage = Utilities.StartupSequence();
 
             bool exit = false;
             string? input;
@@ -16,7 +17,8 @@ namespace GarageApp3p0.Application
             while (!exit) {
                 Utilities.PrintMainMenu();
                 input = Console.ReadLine();
-                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out choice)) {
+                if (string.IsNullOrEmpty(input) 
+                    || !int.TryParse(input, out choice)) {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Inmatningsfel. Försök igen.");
                     Console.ResetColor();
@@ -28,7 +30,7 @@ namespace GarageApp3p0.Application
                         TryToAddVehicle(garage);
                         break;
                     case 2:
-                        //TryToRemoveVehicle(garage);
+                        TryToRemoveVehicle(garage);
                         break;
                     case 3:
                         TryToShowVehicles(garage);
@@ -42,12 +44,30 @@ namespace GarageApp3p0.Application
             Console.WriteLine("Stänger ner programmet...");
         }
 
+        private static void TryToRemoveVehicle(Garage<Vehicle> garage) 
+        {
+            try
+            {
+                Utilities.RemoveVehicle(garage);
+            }
+            catch (Exception ex) 
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Generellt fel: {ex.Message}");
+                Console.ResetColor();
+            }
+        }
+
         private static void TryToAddVehicle(Garage<Vehicle> garage)
         {
             try
             {
                 Vehicle vehicle = Utilities.CreateVehicle(garage);
                 garage.AddVehicle(vehicle);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Fordonet {vehicle.RegNumber} har lagts till i garaget.");
+                Console.ResetColor();
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -73,7 +93,7 @@ namespace GarageApp3p0.Application
         {
             try
             {
-                Utilities.PrintGarage(garage);
+                Utilities.PrintGarage(garage, false, true);
             }
             catch (InvalidOperationException ex)
             {

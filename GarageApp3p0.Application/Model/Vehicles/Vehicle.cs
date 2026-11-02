@@ -37,5 +37,10 @@ namespace GarageApp3p0.Model.Vehicles
             return $"Märke: {Make}\nModell: {Model} ({Year})\n" +
                 $"Reg-nummer: {RegNumber}, Sittplatser: {SeatCount}, Färg: {Color}";
         }
+
+        public string GetLowDetails()
+        {
+            return $"{Make} {Model} - {RegNumber}";
+        }
     }
 }

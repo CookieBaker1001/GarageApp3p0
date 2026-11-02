@@ -9,7 +9,7 @@ namespace GarageApp3p0.Application
 {
     public static class Utilities
     {   
-        public static Garage<Vehicle> WelcomeSequennce()
+        public static Garage<Vehicle> StartupSequence()
         {
             string message = 
                 "      ::::::::      :::     :::::::::      :::      ::::::::  :::::::::: :::::::::::          ::::::::       ::::::: \r\n" +
@@ -26,7 +26,7 @@ namespace GarageApp3p0.Application
                 "Hur stort ska garaget vara?");
             Console.Write(">");
             int garageSize;
-            while (!int.TryParse(Console.ReadLine(), out garageSize))
+            while (!int.TryParse(Console.ReadLine(), out garageSize) && garageSize <= 0)
             {
                 Console.WriteLine("Ogiltigt värde. Försök igen.");
             }
@@ -35,35 +35,60 @@ namespace GarageApp3p0.Application
         }
 
         public static void PrintMainMenu() {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(" -=- Huvudmeny -=-");
             Console.WriteLine("1. Lägg till fordon");
             Console.WriteLine("2. Ta bort fordon");
             Console.WriteLine("3. Visa alla fordon");
             Console.WriteLine("4. Sök efter fordon");
             Console.WriteLine("5. Avsluta");
+            Console.ResetColor();
             Console.Write(">");
         }
 
-        public static void PrintGarage(Garage<Vehicle> garage)
+        public static void RemoveVehicle(Garage<Vehicle> garage) { 
+            PrintGarage(garage, true, true);
+            Console.WriteLine("Vilket fordon vill du ta bort? (1-indexering)");
+            Console.Write(">");
+            int index;
+
+            if (!int.TryParse(Console.ReadLine(), out index))
+                throw new ArgumentException("Ogiltigt index.");
+
+            index--; // Konvertera till 0-indexering
+            garage.RemoveVehicle(index);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Fordonet har tagits bort.");
+            Console.ResetColor();
+        }
+
+        public static void PrintGarage(Garage<Vehicle> garage, bool showLowDetails, bool showIndex)
         {
             if (garage.IsEmpty())
                 throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Fordon i garaget:");
             Console.WriteLine("----------");
+            int i = 1;
             IEnumerator<Vehicle> enumerator = garage.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 Vehicle currentVehicle = enumerator.Current;
-                Console.WriteLine(currentVehicle.ToString());
-                Console.WriteLine("----------");
+                if (showIndex)
+                {
+                    Console.Write($"{i}. ");
+                    i++;
+                }
+                if (!showLowDetails) Console.WriteLine(currentVehicle.ToString());
+                else Console.WriteLine(currentVehicle.GetLowDetails());
             }
+            Console.WriteLine("----------");
             Console.ResetColor();
         }
 
         public static Vehicle CreateVehicle(Garage<Vehicle> garage) {
             Console.WriteLine("Ange fordonstyp.");
-            Console.WriteLine("1. Bil, 2. Motorcykel, 3. Båt, 4. Truck, 5. Bus");
+            Console.WriteLine("1. Bil, 2. Motorcykel, 3. Flygplan, 4. Båt, 5. Buss");
             Console.Write(">");
             int type;
             if (!int.TryParse(Console.ReadLine(), out type))

@@ -9,7 +9,84 @@ namespace GarageApp3p0.Application
         {
             Garage<Vehicle> garage = Utilities.WelcomeSequennce();
 
-            Utilities.PrintMainMenu();
+            bool exit = false;
+            string? input;
+            int choice;
+
+            while (!exit) {
+                Utilities.PrintMainMenu();
+                input = Console.ReadLine();
+                if (string.IsNullOrEmpty(input) || !int.TryParse(input, out choice)) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Inmatningsfel. Försök igen.");
+                    Console.ResetColor();
+                    continue;
+                }
+
+                switch (choice) { 
+                    case 1:
+                        TryToAddVehicle(garage);
+                        break;
+                    case 2:
+                        //TryToRemoveVehicle(garage);
+                        break;
+                    case 3:
+                        TryToShowVehicles(garage);
+                        break;
+                    default:
+                        exit = true;
+                        break;
+                }
+            }
+            Console.WriteLine("Tack för att du använde garaget!");
+            Console.WriteLine("Stänger ner programmet...");
+        }
+
+        private static void TryToAddVehicle(Garage<Vehicle> garage)
+        {
+            try
+            {
+                Vehicle vehicle = Utilities.CreateVehicle(garage);
+                garage.AddVehicle(vehicle);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Argumentintervalfel: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Argumentfel: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Generellt fel: {ex.Message}");
+                Console.ResetColor();
+            }
+        }
+
+        private static void TryToShowVehicles(Garage<Vehicle> garage)
+        {
+            try
+            {
+                Utilities.PrintGarage(garage);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Ogiltig operation: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Generellt fel: {ex.Message}");
+                Console.ResetColor();
+            }
         }
     }
 }

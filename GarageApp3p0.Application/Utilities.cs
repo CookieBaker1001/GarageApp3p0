@@ -1,4 +1,5 @@
-﻿using GarageApp3p0.Model;
+﻿using GarageApp3p0.Application.Model;
+using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace GarageApp3p0.Application
             Console.WriteLine("Välkommen till Garage Appen 3.0!\n" +
                 "Här kan du hantera dina fordon i garaget.\n" +
                 "Hur stort ska garaget vara?");
+            Console.Write(">");
             int garageSize;
             while (!int.TryParse(Console.ReadLine(), out garageSize))
             {
@@ -39,6 +41,186 @@ namespace GarageApp3p0.Application
             Console.WriteLine("3. Visa alla fordon");
             Console.WriteLine("4. Sök efter fordon");
             Console.WriteLine("5. Avsluta");
+            Console.Write(">");
+        }
+
+        public static void PrintGarage(Garage<Vehicle> garage)
+        {
+            if (garage.IsEmpty())
+                throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Fordon i garaget:");
+            Console.WriteLine("----------");
+            IEnumerator<Vehicle> enumerator = garage.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                Vehicle currentVehicle = enumerator.Current;
+                Console.WriteLine(currentVehicle.ToString());
+                Console.WriteLine("----------");
+            }
+            Console.ResetColor();
+        }
+
+        public static Vehicle CreateVehicle(Garage<Vehicle> garage) {
+            Console.WriteLine("Ange fordonstyp.");
+            Console.WriteLine("1. Bil, 2. Motorcykel, 3. Båt, 4. Truck, 5. Bus");
+            Console.Write(">");
+            int type;
+            if (!int.TryParse(Console.ReadLine(), out type))
+                throw new ArgumentException("Ogiltig fordonstyp.");
+            if (type < 1 || type > 5)
+                throw new ArgumentOutOfRangeException("Ogiltig fordonstyp.");
+
+            Vehicle v = PromptForVehicleDetails(type, garage);
+            
+            return v;
+        }
+
+        private static Vehicle PromptForVehicleDetails(int type, Garage<Vehicle> garage) {
+
+            Console.WriteLine("Ange märke.");
+            Console.Write(">");
+            string? make = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(make))
+                throw new ArgumentException("Ogiltigt märke.");
+
+            Console.WriteLine("Ange modell.");
+            Console.Write(">");
+            string? model = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(model))
+                throw new ArgumentException("Ogiltig modell.");
+
+            Console.WriteLine("Ange registreringsnummer.");
+            Console.Write(">");
+            string? regNumber = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(regNumber))
+                throw new ArgumentException("Ogiltigt registreringsnummer.");
+            if (!Garage<Vehicle>.IsValidRegistrationNumber(regNumber))
+                throw new ArgumentException("Ogiltigt registreringsnummer.");
+            if (garage.DoesThisRegNumberAlreadyExist(regNumber))
+                throw new ArgumentException($"Registreringsnumret {regNumber} finns redan i garaget.");
+
+            Console.WriteLine("Ange tillverkningsår.");
+            Console.Write(">");
+            int year;
+            if (!int.TryParse(Console.ReadLine(), out year))
+                throw new ArgumentException("Inmatningsfel.");
+
+            Console.WriteLine("Ange antal sätten.");
+            Console.Write(">");
+            int seatCount;
+            if (!int.TryParse(Console.ReadLine(), out seatCount))
+                throw new ArgumentException("Inmatningsfel.");
+
+            Console.WriteLine("Ange färg.");
+            int count = 0;
+            foreach (string c in validColors)
+            {
+                Console.Write($"{c} ");
+                count++;
+                if (count == 5) {
+                    Console.WriteLine();
+                    count = 0;
+                }
+            }
+            Console.WriteLine();
+            Console.Write(">");
+            string? color = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(color))
+                throw new ArgumentException("Ogiltig färg.");
+            if (!IsValidColor(color))
+                throw new ArgumentException("Ogiltig färg.");
+
+            Vehicle vehicle;
+            if (type == 1) { 
+                vehicle = new Car(make, model, regNumber, year, seatCount, 3, color);
+            } else if (type == 2) {
+                bool hasSidecar;
+                PromptForMotorcycleDetails(out hasSidecar);
+                vehicle = new Motorcycle(make, model, regNumber, year, seatCount, 1, color, hasSidecar);
+            } else if (type == 3) {
+                int maxHeight;
+                int engineCount;
+                PromptForAirplaneDetails(out maxHeight, out engineCount);
+                vehicle = new Airplane(make, model, regNumber, year, seatCount, 5, color, maxHeight, engineCount);
+            } else if (type == 4) {
+                PropulsionType propulsionType;
+                PromptForBoatDetails(out propulsionType);
+                vehicle = new Boat(make, model, regNumber, year, seatCount, 4, color, propulsionType);
+            } else {
+                EngineType engineType;
+                PromptForBusDetails(out engineType);
+                vehicle = new Bus(make, model, regNumber, year, seatCount, 8, color, engineType);
+            }
+            return vehicle;
+        }
+
+        private static void PromptForMotorcycleDetails(out bool hasSidecar)
+        {
+            Console.WriteLine("Har motorcykeln sidovagn? (j/n)");
+            Console.Write(">");
+            char input;
+            if (!char.TryParse(Console.ReadLine(), out input))
+                throw new ArgumentException("Inmatningsfel.");
+            
+            if (input.ToString().ToLower() == "j")
+                hasSidecar = true;
+            else if (input.ToString().ToLower() == "n")
+                hasSidecar = false;
+            else
+                throw new ArgumentException("Ogiltigt värde.");
+        }
+
+        private static void PromptForAirplaneDetails(out int maxHeight, out int engineCount)
+        {
+            Console.WriteLine("Ange planets maxhöjd.");
+            Console.Write(">");
+            int seatCount;
+            if (!int.TryParse(Console.ReadLine(), out seatCount))
+                throw new ArgumentException("Inmatningsfel.");
+            maxHeight = seatCount;
+
+            Console.WriteLine("Ange antal motorer.");
+            Console.Write(">");
+            if (!int.TryParse(Console.ReadLine(), out seatCount))
+                throw new ArgumentException("Inmatningsfel.");
+            engineCount = seatCount;
+        }
+
+        private static void PromptForBoatDetails(out PropulsionType propulsionType)
+        {
+            Console.WriteLine("Ange drivmedelstyp (0 = Rodd, 1 = Segel, 2 = Motor).");
+            Console.Write(">");
+            int propulsionTypeInt;
+            if (!int.TryParse(Console.ReadLine(), out propulsionTypeInt))
+                throw new ArgumentException("Ogiltig drivmedelstyp.");
+            if (propulsionTypeInt < 0 || propulsionTypeInt > 2)
+                throw new ArgumentOutOfRangeException("Ogiltig drivmedelstyp.");
+            propulsionType = (PropulsionType)propulsionTypeInt;
+        }
+
+        private static void PromptForBusDetails(out EngineType engineType)
+        {
+            Console.WriteLine("Ange motortyp (0 = Elektrisk, 1 = Bensin, 2 = Diesel).");
+            Console.Write(">");
+            int engineTypeInt;
+            if (!int.TryParse(Console.ReadLine(), out engineTypeInt))
+                throw new ArgumentException("Ogiltig motortyp.");
+            if (engineTypeInt < 0 || engineTypeInt > 2)
+                throw new ArgumentOutOfRangeException("Ogiltig motortyp.");
+            engineType = (EngineType)engineTypeInt;
+        }
+
+        private static HashSet<string> validColors = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "röd", "blå", "grön", "gul", "orange",
+                "svart", "vit", "grå", "ljusgrå", "mörkgrå",
+                "lila", "rosa", "brun", "turkos", "beige",
+                "silver", "guld",
+            };
+        private static bool IsValidColor(string color)
+        {
+            return validColors.Contains(color.ToLower());
         }
     }
 }

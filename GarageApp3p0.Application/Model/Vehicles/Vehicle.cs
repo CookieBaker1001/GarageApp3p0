@@ -1,5 +1,6 @@
 ﻿using GarageApp3p0.Application.Model;
 using System.Collections;
+using System.Runtime.Serialization;
 
 namespace GarageApp3p0.Model.Vehicles
 {

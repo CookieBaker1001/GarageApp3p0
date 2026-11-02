@@ -1,4 +1,5 @@
-﻿using GarageApp3p0.Model;
+﻿using GarageApp3p0.Application.Data;
+using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
 using System.Diagnostics.Metrics;
 
@@ -40,6 +41,9 @@ namespace GarageApp3p0.Application
                         break;
                 }
             }
+
+            if (!garage.IsEmpty()) Utilities.SaveGarage(garage);
+
             Console.WriteLine("Tack för att du använde garaget!");
             Console.WriteLine("Stänger ner programmet...");
         }

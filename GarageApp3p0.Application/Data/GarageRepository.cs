@@ -1,0 +1,136 @@
+﻿using GarageApp3p0.Application.Model;
+using GarageApp3p0.Model;
+using GarageApp3p0.Model.Vehicles;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace GarageApp3p0.Application.Data
+{
+    internal class GarageRepository
+    {
+        private static string _savefile = "garage.txt";
+        private static string _saveFolder = Path.Combine(
+            Directory.GetParent(AppContext.BaseDirectory)!
+            .Parent!.Parent!.Parent!.FullName, "repository");
+        private static string _savePath = Path.Combine(_saveFolder, _savefile);
+        
+        public static bool SaveFileExists()
+        {
+            return File.Exists(_savePath);
+        }
+
+        private static void CreateSaveFile()
+        {
+            if (!Directory.Exists(_saveFolder))
+            {
+                Directory.CreateDirectory(_saveFolder);
+            }
+            if (!File.Exists(_savePath))
+            {
+                File.Create(_savePath).Dispose();
+            }
+        }
+
+        public static void SaveGarage(Garage<Vehicle> garage)
+        {
+            Console.WriteLine($"Sparar filen i: {Path.GetFullPath(_saveFolder)}");
+
+            CreateSaveFile();
+
+            string[] initialLines = FromGarageToText(garage);
+            File.WriteAllText(_savePath, string.Join("\n", initialLines));
+            // await File.WriteAllLinesAsync(_savePath, initialLines);
+        }
+
+        public static Garage<Vehicle> LoadGarage()
+        {
+            string[] data = File.ReadAllLines(_savePath);
+            List<Vehicle> vehicles = FromTextToGarage(data);
+
+            Garage<Vehicle> garage = new Garage<Vehicle>();
+            garage.ImportVehicles(vehicles);
+            return garage;
+        }
+
+        private static string[] FromGarageToText(Garage<Vehicle> garage)
+        {
+            List<string> lines = new List<string>();
+
+            IEnumerator<Vehicle> vehicles = garage.GetEnumerator();
+            while (vehicles.MoveNext())
+            {
+                Vehicle v = vehicles.Current;
+                StringBuilder sb = new StringBuilder();
+                sb.Append(v.GetType().Name).Append(";");
+                sb.Append(v.Make).Append(";");
+                sb.Append(v.Model).Append(";");
+                sb.Append(v.RegNumber).Append(";");
+                sb.Append(v.Year.ToString()).Append(";");
+                sb.Append(v.SeatCount.ToString()).Append(";");
+                sb.Append(v.ParkingSize.ToString()).Append(";");
+                sb.Append(v.Color).Append(";");
+
+                if (v is Car car)
+                {
+                    // Add Car-specific properties to the string
+                    // None implemented yet
+                }
+                else if (v is Motorcycle motorcycle)
+                    sb.Append(motorcycle.HasSidecar ? "t" : "f");
+                else if (v is Airplane airplane)
+                    sb.Append(airplane.MaxHeight.ToString()).Append(";").Append(airplane.EngineCount.ToString());
+                else if (v is Boat boat)
+                    sb.Append(boat.PropulsionType.ToString());
+                else if (v is Bus bus)
+                    sb.Append(bus.EngineType.ToString());
+
+                lines.Add(sb.ToString());
+            }
+            return lines.ToArray();
+        }
+
+        private static List<Vehicle> FromTextToGarage(string[] data) {
+            List<Vehicle> vehicles = new List<Vehicle>();
+            foreach (string line in data)
+            {
+                string[] parts = line.Split(';');
+                string type = parts[0];
+                switch (type)
+                {
+                    case "Car":
+                        vehicles.Add(new Car(parts[1], parts[2], parts[3],
+                            int.Parse(parts[4]), int.Parse(parts[5]),
+                            int.Parse(parts[6]), parts[7]));
+                        break;
+                    case "Motorcycle":
+                        vehicles.Add(new Motorcycle(parts[1], parts[2], parts[3],
+                            int.Parse(parts[4]), int.Parse(parts[5]),
+                            int.Parse(parts[6]), parts[7],
+                            parts[8] == "t"));
+                        break;
+                    case "Airplane":
+                        vehicles.Add(new Airplane(parts[1], parts[2], parts[3],
+                            int.Parse(parts[4]), int.Parse(parts[5]),
+                            int.Parse(parts[6]), parts[7],
+                            int.Parse(parts[8]), int.Parse(parts[9])));
+                        break;
+                    case "Boat":
+                        vehicles.Add(new Boat(parts[1], parts[2], parts[3],
+                            int.Parse(parts[4]), int.Parse(parts[5]),
+                            int.Parse(parts[6]), parts[7], (PropulsionType)int.Parse(parts[8])));
+                        break;
+                    case "Bus":
+                        vehicles.Add(new Bus(parts[1], parts[2], parts[3],
+                            int.Parse(parts[4]), int.Parse(parts[5]),
+                            int.Parse(parts[6]), parts[7], (EngineType)int.Parse(parts[8])));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return vehicles;
+        }
+    }
+}

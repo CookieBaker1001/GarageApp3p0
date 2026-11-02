@@ -1,4 +1,5 @@
-﻿using GarageApp3p0.Application.Model;
+﻿using GarageApp3p0.Application.Data;
+using GarageApp3p0.Application.Model;
 using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
 using System;
@@ -19,11 +20,25 @@ namespace GarageApp3p0.Application
                 " +#+   +#+# +#+     +#+ +#+    +#+ +#+     +#+ +#+   +#+# +#+            +#+                    +#+     +#+   +#+    \r\n" +
                 "#+#    #+# #+#     #+# #+#    #+# #+#     #+# #+#    #+# #+#            #+#             #+#    #+# #+# #+#   #+#     \r\n" +
                 "########  ###     ### ###    ### ###     ###  ########  ##########     ###              ########  ###  #######       ";
-            Console.WriteLine(message);
+            Console.WriteLine(message+"\n");
 
             Console.WriteLine("Välkommen till Garage Appen 3.0!\n" +
-                "Här kan du hantera dina fordon i garaget.\n" +
-                "Hur stort ska garaget vara?");
+                "Här kan du hantera dina fordon i garaget.");
+
+            if (GarageRepository.SaveFileExists()) { 
+                Console.WriteLine("Hittade en sparad garagelista.");
+                Console.WriteLine("Vill du ladda in den? (j/n)");
+                char input;
+                while (!char.TryParse(Console.ReadLine(), out input))
+                {
+                    Console.WriteLine("Ogiltigt värde. Försök igen.");
+                }
+                if (char.ToLower(input) == 'j') {
+                    return GarageRepository.LoadGarage();
+                }
+            }
+
+            Console.WriteLine("Hur stort ska garaget vara?");
             Console.Write(">");
             int garageSize;
             while (!int.TryParse(Console.ReadLine(), out garageSize) && garageSize <= 0)
@@ -68,7 +83,7 @@ namespace GarageApp3p0.Application
                 throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Fordon i garaget:");
-            Console.WriteLine("----------");
+            Console.WriteLine("----------\n");
             int i = 1;
             IEnumerator<Vehicle> enumerator = garage.GetEnumerator();
             while (enumerator.MoveNext())
@@ -81,6 +96,7 @@ namespace GarageApp3p0.Application
                 }
                 if (!showLowDetails) Console.WriteLine(currentVehicle.ToString());
                 else Console.WriteLine(currentVehicle.GetLowDetails());
+                Console.WriteLine();
             }
             Console.WriteLine("----------");
             Console.ResetColor();
@@ -246,6 +262,38 @@ namespace GarageApp3p0.Application
         private static bool IsValidColor(string color)
         {
             return validColors.Contains(color.ToLower());
+        }
+
+        public static void SaveGarage(Garage<Vehicle> garage)
+        {
+            Console.WriteLine("Vill du spara garaget innan programmet avslutas? (j/n)");
+            Console.Write(">");
+            char input;
+            if (!char.TryParse(Console.ReadLine(), out input))
+                throw new ArgumentException("Inmatningsfel.");
+
+            if (input.ToString().ToLower() == "n")
+                return;
+
+            try
+            {
+                GarageRepository.SaveGarage(garage);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Garaget har sparats.");
+                Console.ResetColor();
+            }
+            catch (IOException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"IO-fel: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Generellt fel: {ex.Message}");
+                Console.ResetColor();
+            }
         }
     }
 }

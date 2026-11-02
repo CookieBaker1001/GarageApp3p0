@@ -15,7 +15,7 @@ namespace GarageApp3p0.Model.Vehicles
 
         public override string ToString()
         {
-            return "Car: " + base.ToString();
+            return "Car\n" + base.ToString();
         }
     }
 }

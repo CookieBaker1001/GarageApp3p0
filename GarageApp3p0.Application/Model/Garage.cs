@@ -3,6 +3,7 @@ using GarageApp3p0.Model.Vehicles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -10,9 +11,9 @@ namespace GarageApp3p0.Model
 {
     public class Garage<T> : IEnumerable<T> where T : Vehicle
     {
-        private List<T> _vehicles;
+        private List<T>? _vehicles;
 
-        private int _capacity;
+        private int _capacity = 0;
         public int Capacity
         {
             get => _capacity;
@@ -21,6 +22,10 @@ namespace GarageApp3p0.Model
                 if (value <= 0) throw new ArgumentException("Capacity cannot be zero or negative.");
                 _capacity = value;
             }
+        }
+
+        public Garage() {
+            _vehicles = new List<T>();
         }
 
         public Garage(int capacity)
@@ -86,6 +91,15 @@ namespace GarageApp3p0.Model
         public bool IsEmpty()
         {
             return _vehicles.Count == 0;
+        }
+
+        public void ImportVehicles(List<T> vehicles)
+        {
+            _vehicles = new List<T>(vehicles.Count);
+            foreach (var vehicle in vehicles)
+            {
+                _vehicles.Add(vehicle);
+            }
         }
     }
 }

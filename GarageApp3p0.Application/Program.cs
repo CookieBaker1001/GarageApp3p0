@@ -36,6 +36,9 @@ namespace GarageApp3p0.Application
                     case 3:
                         TryToShowVehicles(garage);
                         break;
+                    case 4:
+                        TryToPerformAdvancedSearch(garage);
+                        break;
                     default:
                         exit = true;
                         break;
@@ -46,6 +49,26 @@ namespace GarageApp3p0.Application
 
             Console.WriteLine("Tack för att du använde garaget!");
             Console.WriteLine("Stänger ner programmet...");
+        }
+
+        private static void TryToPerformAdvancedSearch(Garage<Vehicle> garage)
+        {
+            try
+            {
+                Utilities.PerformAdvancedSearch(garage);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Ogiltig operation: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Generellt fel: {ex.Message}");
+                Console.ResetColor();
+            }
         }
 
         private static void TryToRemoveVehicle(Garage<Vehicle> garage) 

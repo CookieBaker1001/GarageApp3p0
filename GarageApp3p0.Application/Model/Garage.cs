@@ -47,7 +47,7 @@ namespace GarageApp3p0.Model
         }
 
         public bool DoesThisVehicleFit(T vehicle) { 
-            return (CurrentCapacity + vehicle.DefaultParkingSize) <= MaxCapacity;
+            return (CurrentCapacity + vehicle.ParkingSize) <= MaxCapacity;
         }
 
         public void AddVehicle(T vehicle)
@@ -59,7 +59,7 @@ namespace GarageApp3p0.Model
                 throw new InvalidOperationException("Det finns inte tillräckligt med utrymme i garaget för detta fordon.");
 
             vehicle.RegNumber = vehicle.RegNumber.ToUpper();
-            CurrentCapacity += vehicle.DefaultParkingSize;
+            CurrentCapacity += vehicle.ParkingSize;
             _vehicles.Add(vehicle);
         }
 
@@ -68,7 +68,7 @@ namespace GarageApp3p0.Model
             if (index < 0 || index >= _vehicles.Count)
                 throw new ArgumentOutOfRangeException("Index is out of bounds.");
 
-            CurrentCapacity -= _vehicles[index].DefaultParkingSize;
+            CurrentCapacity -= _vehicles[index].ParkingSize;
             _vehicles.RemoveAt(index);
         }
 
@@ -116,8 +116,15 @@ namespace GarageApp3p0.Model
             foreach (var vehicle in vehicles)
             {
                 _vehicles.Add(vehicle);
-                CurrentCapacity += vehicle.DefaultParkingSize;
+                CurrentCapacity += vehicle.ParkingSize;
             }
+        }
+
+        public List<T> CopyContent()
+        {
+            List<T> copy = new List<T>();
+            if (_vehicles is not null) copy.AddRange(_vehicles);
+            return copy;
         }
     }
 }

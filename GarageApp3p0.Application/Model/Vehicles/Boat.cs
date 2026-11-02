@@ -7,7 +7,7 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public class Boat : Vehicle
     {
-        public override int DefaultParkingSize { get; } = 4;
+        public override int ParkingSize { get; } = 4;
         private PropulsionType _propulsionType;
         public PropulsionType PropulsionType { 
             get => _propulsionType; 
@@ -20,15 +20,15 @@ namespace GarageApp3p0.Model.Vehicles
             } 
         }
         public Boat(string make, string model, string regNumber, int year,
-            int seatCount, int parkingSize, string color, PropulsionType propulsionType) :
-            base(make, model, regNumber, year, seatCount, parkingSize, color)
+            int seatCount, string color, PropulsionType propulsionType) :
+            base(make, model, regNumber, year, seatCount, color)
         {
             PropulsionType = propulsionType;
         }
 
         public override string ToString()
         {
-            return $"Båt (Storlek: {DefaultParkingSize})\n" + base.ToString() +
+            return $"Båt (Storlek: {ParkingSize})\n" + base.ToString() +
                 $"\nDrivmedel: '{PropulsionType}'";
         }
     }

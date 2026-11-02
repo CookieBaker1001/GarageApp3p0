@@ -1,3 +1,4 @@
-10
-Car;Progen;Emerus;KED827;2018;2;3;grå;
-Motorcycle;Shitzu;Hakucho;JSO282;2016;1;1;lila;f
+20
+Car;Progen;Emerus;JDI382;2018;2;3;3;
+Motorcycle;Shitzu;Hakucho;AUW273;2015;1;1;1;f
+Car;Dewbauchee;Vagner;KET376;2015;2;3;röd;

@@ -99,9 +99,7 @@ namespace GarageApp3p0.Application.Data
             List<Vehicle> vehicles = new List<Vehicle>();
             maxCapacity = int.Parse(data[0]);
             for (int i = 1; i < data.Length; i++)
-            //foreach (string line in data)
             {
-                //string[] parts = line.Split(';');
                 string[] parts = data[i].Split(';');
                 string type = parts[0];
                 switch (type)
@@ -109,29 +107,28 @@ namespace GarageApp3p0.Application.Data
                     case "Car":
                         vehicles.Add(new Car(parts[1], parts[2], parts[3],
                             int.Parse(parts[4]), int.Parse(parts[5]),
-                            int.Parse(parts[6]), parts[7]));
+                            parts[6]));
                         break;
                     case "Motorcycle":
                         vehicles.Add(new Motorcycle(parts[1], parts[2], parts[3],
                             int.Parse(parts[4]), int.Parse(parts[5]),
-                            int.Parse(parts[6]), parts[7],
-                            parts[8] == "t"));
+                            parts[6], parts[7] == "t"));
                         break;
                     case "Airplane":
                         vehicles.Add(new Airplane(parts[1], parts[2], parts[3],
                             int.Parse(parts[4]), int.Parse(parts[5]),
-                            int.Parse(parts[6]), parts[7],
-                            int.Parse(parts[8]), int.Parse(parts[9])));
+                            parts[6], int.Parse(parts[7]),
+                            int.Parse(parts[8])));
                         break;
                     case "Boat":
                         vehicles.Add(new Boat(parts[1], parts[2], parts[3],
                             int.Parse(parts[4]), int.Parse(parts[5]),
-                            int.Parse(parts[6]), parts[7], (PropulsionType)int.Parse(parts[8])));
+                            parts[6], (PropulsionType)int.Parse(parts[7])));
                         break;
                     case "Bus":
                         vehicles.Add(new Bus(parts[1], parts[2], parts[3],
                             int.Parse(parts[4]), int.Parse(parts[5]),
-                            int.Parse(parts[6]), parts[7], (EngineType)int.Parse(parts[8])));
+                            parts[6], (EngineType)int.Parse(parts[7])));
                         break;
                     default:
                         break;

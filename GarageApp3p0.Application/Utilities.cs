@@ -4,6 +4,7 @@ using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace GarageApp3p0.Application
@@ -77,16 +78,11 @@ namespace GarageApp3p0.Application
             Console.ResetColor();
         }
 
-        public static void PrintGarage(Garage<Vehicle> garage, bool showLowDetails, bool showIndex)
+        private static void PrintList(IEnumerator<Vehicle> enumerator, bool showLowDetails, bool showIndex)
         {
-            if (garage.IsEmpty())
-                throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Fordon i garaget:");
-            Console.WriteLine($"Kapacitet: {garage.CurrentCapacity}/{garage.MaxCapacity}");
             Console.WriteLine("----------\n");
             int i = 1;
-            IEnumerator<Vehicle> enumerator = garage.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 Vehicle currentVehicle = enumerator.Current;
@@ -101,6 +97,16 @@ namespace GarageApp3p0.Application
             }
             Console.WriteLine("----------");
             Console.ResetColor();
+        }
+
+        public static void PrintGarage(Garage<Vehicle> garage, bool showLowDetails, bool showIndex)
+        {
+            if (garage.IsEmpty())
+                throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("Fordon i garaget:");
+            Console.WriteLine($"Kapacitet: {garage.CurrentCapacity}/{garage.MaxCapacity}");
+            PrintList(garage.GetEnumerator(), showLowDetails, showIndex);
         }
 
         public static Vehicle CreateVehicle(Garage<Vehicle> garage) {
@@ -175,24 +181,24 @@ namespace GarageApp3p0.Application
 
             Vehicle vehicle;
             if (type == 1) { 
-                vehicle = new Car(make, model, regNumber, year, seatCount, 3, color);
+                vehicle = new Car(make, model, regNumber, year, seatCount, color);
             } else if (type == 2) {
                 bool hasSidecar;
                 PromptForMotorcycleDetails(out hasSidecar);
-                vehicle = new Motorcycle(make, model, regNumber, year, seatCount, 1, color, hasSidecar);
+                vehicle = new Motorcycle(make, model, regNumber, year, seatCount, color, hasSidecar);
             } else if (type == 3) {
                 int maxHeight;
                 int engineCount;
                 PromptForAirplaneDetails(out maxHeight, out engineCount);
-                vehicle = new Airplane(make, model, regNumber, year, seatCount, 5, color, maxHeight, engineCount);
+                vehicle = new Airplane(make, model, regNumber, year, seatCount, color, maxHeight, engineCount);
             } else if (type == 4) {
                 PropulsionType propulsionType;
                 PromptForBoatDetails(out propulsionType);
-                vehicle = new Boat(make, model, regNumber, year, seatCount, 4, color, propulsionType);
+                vehicle = new Boat(make, model, regNumber, year, seatCount, color, propulsionType);
             } else {
                 EngineType engineType;
                 PromptForBusDetails(out engineType);
-                vehicle = new Bus(make, model, regNumber, year, seatCount, 8, color, engineType);
+                vehicle = new Bus(make, model, regNumber, year, seatCount, color, engineType);
             }
             return vehicle;
         }
@@ -297,6 +303,74 @@ namespace GarageApp3p0.Application
                 Console.WriteLine($"Generellt fel: {ex.Message}");
                 Console.ResetColor();
             }
+        }
+
+        public static void PerformAdvancedSearch(Garage<Vehicle> garage) {
+            bool exit = false;
+            string? input;
+            List<Vehicle> filteredVehicles = garage.CopyContent();
+            while (!exit) {
+                PrintAdvancedSearchMenu();
+                Console.Write(">");
+                input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) {
+                    Console.WriteLine("Inmatningsfel. Försök igen.");
+                    continue;
+                }
+
+                switch (input.ToLower()) {
+                    case "1":
+                        // Ej implementerat ännu.
+                        //FilterHelperClass.FilterIndex(vehicles);
+                        break;
+                    case "2":
+                        // Sort by make
+                        filteredVehicles = FilterHelperClass.FilterMake(filteredVehicles);
+                        break;
+                    case "3":
+                        // Sort by model
+                        filteredVehicles = FilterHelperClass.FilterModel(filteredVehicles);
+                        break;
+                    case "4":
+                        // Sort by regnumber
+                        break;
+                    case "5":
+                        // Sort by year
+                        break;
+                    case "6":
+                        // Sort by color
+                        break;
+                    case "7":
+                        // View the list
+                        PrintList(filteredVehicles.GetEnumerator(), true, true);
+                        break;
+                    case "8":
+                        // Done with advanced search, return to main menu
+                        exit = true;
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Ogiltigt val. Försök igen.");
+                        Console.ResetColor();
+                        break;
+                }
+            }
+            PrintList(filteredVehicles.GetEnumerator(), true, true);
+        }
+
+        private static void PrintAdvancedSearchMenu() {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Avancerad sökning. Välj alternativ för " +
+                "att filtrera bland garagets fordon:");
+            Console.WriteLine("1. Filtrera efter index");
+            Console.WriteLine("2. Sortera efter märke");
+            Console.WriteLine("3. Sortera efter modell");
+            Console.WriteLine("4. Filtrera efter registreringsnummer");
+            Console.WriteLine("5. Sortera efter årtal");
+            Console.WriteLine("6. Sortera efter färg");
+            Console.WriteLine("7. Snegla på listan");
+            Console.WriteLine("8. Återgå till huvudmenyn");
+            Console.ResetColor();
         }
     }
 }

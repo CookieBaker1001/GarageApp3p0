@@ -7,6 +7,7 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public class Bus : Vehicle
     {
+        public override int DefaultParkingSize { get; } = 8;
         private EngineType _engineType;
         public EngineType EngineType { 
             get => _engineType;
@@ -26,7 +27,7 @@ namespace GarageApp3p0.Model.Vehicles
 
         public override string ToString()
         {
-            return "Buss\n" + base.ToString() +
+            return $"Buss (Storlek: {DefaultParkingSize})\n" + base.ToString() +
                 $"\nMotortyp: '{EngineType}'";
         }
     }

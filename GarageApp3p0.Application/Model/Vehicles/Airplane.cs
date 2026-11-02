@@ -6,6 +6,7 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public class Airplane : Vehicle
     {
+        public override int DefaultParkingSize { get; } = 5;
         private int _maxHeight;
         public int MaxHeight { 
             get => _maxHeight;
@@ -38,7 +39,7 @@ namespace GarageApp3p0.Model.Vehicles
 
         public override string ToString()
         {
-            return "Flygplan\n" + base.ToString() + 
+            return $"Flygplan (Storlek: {DefaultParkingSize})\n" + base.ToString() + 
                 $"\nMaxhöjd: {MaxHeight}\nAntal motorer: {EngineCount}";
         }
     }

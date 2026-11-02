@@ -4,13 +4,14 @@ using GarageApp3p0.Model.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GarageApp3p0.Application.Data
 {
     internal class GarageRepository
     {
         private static string _savefile = "garage.txt";
+        // Detta är en sökväg som pekar på en mapp som ligger på
+        // projektets rot-nivå
         private static string _saveFolder = Path.Combine(
             Directory.GetParent(AppContext.BaseDirectory)!
             .Parent!.Parent!.Parent!.FullName, "repository");
@@ -33,7 +34,7 @@ namespace GarageApp3p0.Application.Data
             }
         }
 
-        public static void SaveGarage(Garage<Vehicle> garage)
+        public static string SaveGarage(Garage<Vehicle> garage)
         {
             Console.WriteLine($"Sparar filen i: {Path.GetFullPath(_saveFolder)}");
 
@@ -42,14 +43,16 @@ namespace GarageApp3p0.Application.Data
             string[] initialLines = FromGarageToText(garage);
             File.WriteAllText(_savePath, string.Join("\n", initialLines));
             // await File.WriteAllLinesAsync(_savePath, initialLines);
+            return _savePath;
         }
 
         public static Garage<Vehicle> LoadGarage()
         {
             string[] data = File.ReadAllLines(_savePath);
-            List<Vehicle> vehicles = FromTextToGarage(data);
+            int maxCapacity;
+            List<Vehicle> vehicles = FromTextToGarage(data, out maxCapacity);
 
-            Garage<Vehicle> garage = new Garage<Vehicle>();
+            Garage<Vehicle> garage = new Garage<Vehicle>(maxCapacity);
             garage.ImportVehicles(vehicles);
             return garage;
         }
@@ -57,6 +60,7 @@ namespace GarageApp3p0.Application.Data
         private static string[] FromGarageToText(Garage<Vehicle> garage)
         {
             List<string> lines = new List<string>();
+            lines.Add(garage.MaxCapacity.ToString());
 
             IEnumerator<Vehicle> vehicles = garage.GetEnumerator();
             while (vehicles.MoveNext())
@@ -91,11 +95,14 @@ namespace GarageApp3p0.Application.Data
             return lines.ToArray();
         }
 
-        private static List<Vehicle> FromTextToGarage(string[] data) {
+        private static List<Vehicle> FromTextToGarage(string[] data, out int maxCapacity) {
             List<Vehicle> vehicles = new List<Vehicle>();
-            foreach (string line in data)
+            maxCapacity = int.Parse(data[0]);
+            for (int i = 1; i < data.Length; i++)
+            //foreach (string line in data)
             {
-                string[] parts = line.Split(';');
+                //string[] parts = line.Split(';');
+                string[] parts = data[i].Split(';');
                 string type = parts[0];
                 switch (type)
                 {

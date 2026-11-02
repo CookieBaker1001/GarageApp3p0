@@ -12,39 +12,54 @@ namespace GarageApp3p0.Model
     public class Garage<T> : IEnumerable<T> where T : Vehicle
     {
         private List<T>? _vehicles;
-
-        private int _capacity = 0;
-        public int Capacity
+        private int _currentCapacity = 0;
+        public int CurrentCapacity
         {
-            get => _capacity;
+            get => _currentCapacity;
+            private set { _currentCapacity = value; }
+        }
+        private int _maxCapacity = 0;
+        public int MaxCapacity
+        {
+            get => _maxCapacity;
             private set
             {
                 if (value <= 0) throw new ArgumentException("Capacity cannot be zero or negative.");
-                _capacity = value;
+                _maxCapacity = value;
             }
         }
 
-        public Garage() {
+        public Garage()
+        {
             _vehicles = new List<T>();
         }
-
         public Garage(int capacity)
         {
             _vehicles = new List<T>();
-            Capacity = capacity;
+            MaxCapacity = capacity;
         }
 
-        private static Regex regNumberRegex = new Regex(@"^[A-Z]{3}\d{3}$");
+        private static Regex regNumberRegex = new Regex(@"[A-Z]{3}\d{3}\Z");
         public static bool IsValidRegistrationNumber(string regNumber)
         {
             regNumber = regNumber.ToUpper();
             return regNumberRegex.IsMatch(regNumber);
         }
 
+        public bool DoesThisVehicleFit(T vehicle) { 
+            return (CurrentCapacity + vehicle.DefaultParkingSize) <= MaxCapacity;
+        }
+
         public void AddVehicle(T vehicle)
         {
-            if (_vehicles.Count == Capacity)
+            if (_currentCapacity == MaxCapacity)
                 throw new InvalidOperationException("Garaget är fullpackat.");
+
+            if (!DoesThisVehicleFit(vehicle))
+                throw new InvalidOperationException("Det finns inte tillräckligt med utrymme i garaget för detta fordon.");
+
+            vehicle.RegNumber = vehicle.RegNumber.ToUpper();
+            CurrentCapacity += vehicle.DefaultParkingSize;
             _vehicles.Add(vehicle);
         }
 
@@ -52,6 +67,8 @@ namespace GarageApp3p0.Model
         {
             if (index < 0 || index >= _vehicles.Count)
                 throw new ArgumentOutOfRangeException("Index is out of bounds.");
+
+            CurrentCapacity -= _vehicles[index].DefaultParkingSize;
             _vehicles.RemoveAt(index);
         }
 
@@ -85,7 +102,7 @@ namespace GarageApp3p0.Model
 
         public bool IsFull()
         {
-            return _vehicles.Count >= Capacity;
+            return _vehicles.Count >= MaxCapacity;
         }
 
         public bool IsEmpty()
@@ -99,6 +116,7 @@ namespace GarageApp3p0.Model
             foreach (var vehicle in vehicles)
             {
                 _vehicles.Add(vehicle);
+                CurrentCapacity += vehicle.DefaultParkingSize;
             }
         }
     }

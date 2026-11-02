@@ -6,6 +6,7 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public abstract class Vehicle
     {
+        public virtual int DefaultParkingSize { get; } = 1;
         public string Make { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public string RegNumber { get; set; } = string.Empty;

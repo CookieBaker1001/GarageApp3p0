@@ -81,8 +81,9 @@ namespace GarageApp3p0.Application
         {
             if (garage.IsEmpty())
                 throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Fordon i garaget:");
+            Console.WriteLine($"Kapacitet: {garage.CurrentCapacity}/{garage.MaxCapacity}");
             Console.WriteLine("----------\n");
             int i = 1;
             IEnumerator<Vehicle> enumerator = garage.GetEnumerator();
@@ -103,8 +104,10 @@ namespace GarageApp3p0.Application
         }
 
         public static Vehicle CreateVehicle(Garage<Vehicle> garage) {
-            Console.WriteLine("Ange fordonstyp.");
-            Console.WriteLine("1. Bil, 2. Motorcykel, 3. Flygplan, 4. Båt, 5. Buss");
+            Console.WriteLine("Olika fordon tar olika mycket plats i garaget.");
+            Console.WriteLine($"Nuvarande kapacitet: {garage.CurrentCapacity}/{garage.MaxCapacity}");
+            Console.WriteLine("Ange fordonstyp. (Utrymme anges i parentes)");
+            Console.WriteLine("1. Bil(3), 2. Motorcykel(1), 3. Flygplan(5), 4. Båt(4), 5. Buss(8)");
             Console.Write(">");
             int type;
             if (!int.TryParse(Console.ReadLine(), out type))
@@ -112,9 +115,7 @@ namespace GarageApp3p0.Application
             if (type < 1 || type > 5)
                 throw new ArgumentOutOfRangeException("Ogiltig fordonstyp.");
 
-            Vehicle v = PromptForVehicleDetails(type, garage);
-            
-            return v;
+            return PromptForVehicleDetails(type, garage);
         }
 
         private static Vehicle PromptForVehicleDetails(int type, Garage<Vehicle> garage) {
@@ -277,9 +278,11 @@ namespace GarageApp3p0.Application
 
             try
             {
-                GarageRepository.SaveGarage(garage);
+                string path = GarageRepository.SaveGarage(garage);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Garaget har sparats.");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("Fil: " + path);
                 Console.ResetColor();
             }
             catch (IOException ex)

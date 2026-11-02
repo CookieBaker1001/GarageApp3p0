@@ -15,7 +15,7 @@ public class GarageTests
         Garage<Vehicle> garage = new Garage<Vehicle>(capacity);
 
         // Assert
-        Assert.Equal(capacity, garage.Capacity);
+        Assert.Equal(capacity, garage.MaxCapacity);
     }
 
     [Theory]

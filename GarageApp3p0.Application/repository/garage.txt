@@ -1,8 +1,9 @@
-20
-Car;Progen;Emerus;JDI382;2018;2;röd;
+40
+Car;Progen;Emerus;JDI382;2018;2;röd;t
 Motorcycle;Shitzu;Hakucho;AUW273;2015;1;blå;f
-Car;Dewbauchee;Vagner;KET376;2015;2;lila;
+Car;Dewbauchee;Vagner;KET376;2015;2;lila;f
 Airplane;Flyg;Plan;WDU383;2000;6;blå;1742;2
 Boat;Flyt;Bit;JFU345;1900;5;orange;1
 Motorcycle;Maibatsu;Speeder;JFE487;2010;1;svart;t
-Car;Ford;Mustang;ODW856;2000;4;röd;
+Car;Ford;Mustang;ODW856;2000;4;röd;f
+Bus;Lång;Tradare;WDE789;999;80;brun;2

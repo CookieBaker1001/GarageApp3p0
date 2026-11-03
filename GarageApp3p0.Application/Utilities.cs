@@ -1,4 +1,5 @@
-﻿using GarageApp3p0.Application.Data;
+﻿using GarageApp.Model;
+using GarageApp3p0.Application.Data;
 using GarageApp3p0.Application.HandlerClasses;
 using GarageApp3p0.Application.HelperClasses;
 using GarageApp3p0.Application.Model;
@@ -29,16 +30,17 @@ namespace GarageApp3p0.Application
             Console.WriteLine("Välkommen till Garage Appen 3.0!\n" +
                 "Här kan du hantera dina fordon i garaget.");
 
+            char loadFromFile = 'j';
             if (GarageRepository.SaveFileExists()) {
                 PromptHandler.AskUser("Hittade en sparad garagelista.\n" +
                     "Vill du ladda in den? (j/n)", ConsoleColor.Yellow);
                 
-                char input;
-                while (!char.TryParse(Console.ReadLine(), out input))
+                while (!char.TryParse(Console.ReadLine(), out loadFromFile) || (loadFromFile != 'j' && loadFromFile != 'n'))
                 {
                     Console.WriteLine("Ogiltigt värde. Försök igen.");
                 }
-                if (char.ToLower(input) == 'j') {
+                if (char.ToLower(loadFromFile) == 'j')
+                {
                     return GarageRepository.LoadGarage();
                 }
             }
@@ -49,7 +51,22 @@ namespace GarageApp3p0.Application
             {
                 Console.WriteLine("Ogiltigt värde. Försök igen.");
             }
+
             Garage<Vehicle> garage = new Garage<Vehicle>(garageSize);
+
+            if (loadFromFile == 'n') { 
+                PromptHandler.AskUser("Vill du fylla garaget med en slumpmässig lista av fordon? (j/n)", ConsoleColor.Yellow);
+                char fillGarage;
+                while (!char.TryParse(Console.ReadLine(), out fillGarage) || (fillGarage != 'j' && fillGarage != 'n'))
+                {
+                    Console.WriteLine("Ogiltigt värde. Försök igen.");
+                }
+                if (fillGarage == 'j') {
+                    List<Vehicle> randomList = StartList.GetRandomList(garage.MaxCapacity);
+                    garage.ImportVehicles(randomList);
+                }
+            }
+            
             return garage;
         }
 
@@ -146,7 +163,7 @@ namespace GarageApp3p0.Application
             if (!int.TryParse(Console.ReadLine(), out seatCount))
                 throw new ArgumentException("Inmatningsfel.");
 
-            PromptHandler.AskUser($"Ange färg.\n{ColorHandler.GetValidColorsString(8)}", ConsoleColor.Yellow);
+            PromptHandler.AskUser($"Ange färg.\n{ColorHandler.GetValidColorsString(6)}", ConsoleColor.Yellow);
             string? color = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(color))
                 throw new ArgumentException("Ogiltig färg.");
@@ -154,8 +171,10 @@ namespace GarageApp3p0.Application
                 throw new ArgumentException("Ogiltig färg.");
 
             Vehicle vehicle;
-            if (type == 1) { 
-                vehicle = new Car(make, model, regNumber, year, seatCount, color);
+            if (type == 1) {
+                bool hasSunRoof;
+                PromptForCarDetails(out hasSunRoof);
+                vehicle = new Car(make, model, regNumber, year, seatCount, color, hasSunRoof);
             } else if (type == 2) {
                 bool hasSidecar;
                 PromptForMotorcycleDetails(out hasSidecar);
@@ -175,6 +194,21 @@ namespace GarageApp3p0.Application
                 vehicle = new Bus(make, model, regNumber, year, seatCount, color, engineType);
             }
             return vehicle;
+        }
+
+        private static void PromptForCarDetails(out bool hasSunRoof)
+        {
+            PromptHandler.AskUser("Har bilen soltak? (j/n)", ConsoleColor.Yellow);
+            char input;
+            if (!char.TryParse(Console.ReadLine(), out input))
+                throw new ArgumentException("Inmatningsfel.");
+
+            if (input.ToString().ToLower() == "j")
+                hasSunRoof = true;
+            else if (input.ToString().ToLower() == "n")
+                hasSunRoof = false;
+            else
+                throw new ArgumentException("Ogiltigt värde.");
         }
 
         private static void PromptForMotorcycleDetails(out bool hasSidecar)
@@ -220,7 +254,7 @@ namespace GarageApp3p0.Application
 
         private static void PromptForBusDetails(out EngineType engineType)
         {
-            PromptHandler.AskUser("Ange motortyp (1 = Bensin, 2 = Diesel, 3 = Elektrisk). (1-indexering))", ConsoleColor.Yellow);
+            PromptHandler.AskUser("Ange motortyp (1 = Bensin, 2 = Diesel, 3 = Elektrisk). (1-indexering)", ConsoleColor.Yellow);
             int engineTypeInt;
             if (!int.TryParse(Console.ReadLine(), out engineTypeInt))
                 throw new ArgumentException("Ogiltig motortyp.");

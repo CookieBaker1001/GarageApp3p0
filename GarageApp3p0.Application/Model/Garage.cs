@@ -11,7 +11,7 @@ namespace GarageApp3p0.Model
 {
     public class Garage<T> : IEnumerable<T> where T : Vehicle
     {
-        private List<T>? _vehicles;
+        private List<T> _vehicles;
         private int _currentCapacity = 0;
         public int CurrentCapacity
         {
@@ -29,10 +29,6 @@ namespace GarageApp3p0.Model
             }
         }
 
-        public Garage()
-        {
-            _vehicles = new List<T>();
-        }
         public Garage(int capacity)
         {
             _vehicles = new List<T>();

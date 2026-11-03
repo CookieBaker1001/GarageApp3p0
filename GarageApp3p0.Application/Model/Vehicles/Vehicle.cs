@@ -23,6 +23,8 @@ namespace GarageApp3p0.Model.Vehicles
         public int ParkingSize { get; private set; }
         public string Color { get; set; } = string.Empty;
 
+        public Vehicle() { }
+
         public Vehicle(string make, string model, string regNumber, int year, 
             int seatCount, int parkingSize, string color) { 
             Make = make;

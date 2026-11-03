@@ -11,12 +11,13 @@ namespace GarageApp3p0.Model.Vehicles
         public EngineType EngineType { 
             get => _engineType;
             set {
-                if (value > EngineType.Gasoline || value < EngineType.Electric) {
+                if (value < EngineType.Gasoline || value > EngineType.Electric) {
                     throw new ArgumentOutOfRangeException(nameof(value), "Ogiltig motortyp.");
                 }
                 _engineType = value;
             } 
         }
+        public Bus() { }
         public Bus(string make, string model, string regNumber, int year,
             int seatCount, string color, EngineType engineType) :
             base(make, model, regNumber, year, seatCount, 8, color)

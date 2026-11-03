@@ -76,10 +76,7 @@ namespace GarageApp3p0.Application.Data
                 sb.Append(v.Color).Append(";");
 
                 if (v is Car car)
-                {
-                    // Add Car-specific properties to the string
-                    // None implemented yet
-                }
+                    sb.Append(car.HasSunRoof ? "t" : "f");
                 else if (v is Motorcycle motorcycle)
                     sb.Append(motorcycle.HasSidecar ? "t" : "f");
                 else if (v is Airplane airplane)
@@ -106,7 +103,7 @@ namespace GarageApp3p0.Application.Data
                     case "Car":
                         vehicles.Add(new Car(parts[1], parts[2], parts[3],
                             int.Parse(parts[4]), int.Parse(parts[5]),
-                            parts[6]));
+                            parts[6], parts[7] == "t"));
                         break;
                     case "Motorcycle":
                         vehicles.Add(new Motorcycle(parts[1], parts[2], parts[3],

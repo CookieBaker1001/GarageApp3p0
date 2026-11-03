@@ -18,6 +18,7 @@ namespace GarageApp3p0.Model.Vehicles
                 _propulsionType = value;
             } 
         }
+        public Boat() { }
         public Boat(string make, string model, string regNumber, int year,
             int seatCount, string color, PropulsionType propulsionType) :
             base(make, model, regNumber, year, seatCount, 4, color)

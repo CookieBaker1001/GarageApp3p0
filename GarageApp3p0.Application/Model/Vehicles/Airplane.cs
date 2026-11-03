@@ -26,8 +26,9 @@ namespace GarageApp3p0.Model.Vehicles
                     throw new ArgumentOutOfRangeException("Antal motorer måste vara större än 0.");
                 }
                 _engineCount = value;
-            } 
+            }
         }
+        public Airplane() { }
         public Airplane(string make, string model, string regNumber, int year,
             int seatCount, string color, int maxHeight, int engineCount) :
             base(make, model, regNumber, year, seatCount, 5, color)

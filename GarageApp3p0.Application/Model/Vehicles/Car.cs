@@ -6,16 +6,19 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public class Car : Vehicle
     {
+        public bool HasSunRoof { get; set; }
+        public Car() { }
         public Car(string make, string model, string regNumber, 
-            int year, int seatCount, string color) : 
+            int year, int seatCount, string color, bool hasSunroof) : 
             base(make, model, regNumber, year, seatCount, 3, color)
         {
-            
+            HasSunRoof = hasSunroof;
         }
 
         public override string ToString()
         {
-            return $"Bil (Storlek: {ParkingSize})\n" + base.ToString();
+            return $"Bil (Storlek: {ParkingSize})\n" + base.ToString() + 
+                $"\nFönstertak?: {HasSunRoof}";
         }
     }
 }

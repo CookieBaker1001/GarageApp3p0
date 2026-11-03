@@ -1,4 +1,5 @@
 ﻿using GarageApp3p0.Application.Data;
+using GarageApp3p0.Application.HelperClasses;
 using GarageApp3p0.Application.Model;
 using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
@@ -143,7 +144,7 @@ namespace GarageApp3p0.Application
             string? regNumber = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(regNumber))
                 throw new ArgumentException("Ogiltigt registreringsnummer.");
-            if (!Garage<Vehicle>.IsValidRegistrationNumber(regNumber))
+            if (!RegexHelper.IsValidRegistrationNumber(regNumber))
                 throw new ArgumentException("Ogiltigt registreringsnummer.");
             if (garage.DoesThisRegNumberAlreadyExist(regNumber))
                 throw new ArgumentException($"Registreringsnumret {regNumber} finns redan i garaget.");
@@ -162,7 +163,8 @@ namespace GarageApp3p0.Application
 
             Console.WriteLine("Ange färg.");
             int count = 0;
-            foreach (string c in validColors)
+            string[] colors = ColorHelper.GetValidColors();
+            foreach (string c in colors)
             {
                 Console.Write($"{c} ");
                 count++;
@@ -176,7 +178,7 @@ namespace GarageApp3p0.Application
             string? color = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(color))
                 throw new ArgumentException("Ogiltig färg.");
-            if (!IsValidColor(color))
+            if (!ColorHelper.IsValidColor(color))
                 throw new ArgumentException("Ogiltig färg.");
 
             Vehicle vehicle;
@@ -259,18 +261,6 @@ namespace GarageApp3p0.Application
             engineType = (EngineType)engineTypeInt;
         }
 
-        private static HashSet<string> validColors = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                "röd", "blå", "grön", "gul", "orange",
-                "svart", "vit", "grå", "ljusgrå", "mörkgrå",
-                "lila", "rosa", "brun", "turkos", "beige",
-                "silver", "guld",
-            };
-        private static bool IsValidColor(string color)
-        {
-            return validColors.Contains(color.ToLower());
-        }
-
         public static void SaveGarage(Garage<Vehicle> garage)
         {
             Console.WriteLine("Vill du spara garaget innan programmet avslutas? (j/n)");
@@ -309,7 +299,9 @@ namespace GarageApp3p0.Application
             bool exit = false;
             string? input;
             List<Vehicle> filteredVehicles = garage.CopyContent();
+            int previousCount;
             while (!exit) {
+                previousCount = filteredVehicles.Count;
                 PrintAdvancedSearchMenu();
                 Console.Write(">");
                 input = Console.ReadLine();
@@ -325,20 +317,23 @@ namespace GarageApp3p0.Application
                         break;
                     case "2":
                         // Sort by make
-                        filteredVehicles = FilterHelperClass.FilterMake(filteredVehicles);
+                        filteredVehicles = FilterHelper.FilterMake(filteredVehicles);
                         break;
                     case "3":
                         // Sort by model
-                        filteredVehicles = FilterHelperClass.FilterModel(filteredVehicles);
+                        filteredVehicles = FilterHelper.FilterModel(filteredVehicles);
                         break;
                     case "4":
-                        // Sort by regnumber
+                        // Search by regnumber
+                        filteredVehicles = FilterHelper.FilterRegNumber(filteredVehicles);
                         break;
                     case "5":
                         // Sort by year
+                        filteredVehicles= FilterHelper.FilterYear(filteredVehicles);
                         break;
                     case "6":
                         // Sort by color
+                        filteredVehicles = FilterHelper.FilterColor(filteredVehicles);
                         break;
                     case "7":
                         // View the list
@@ -354,8 +349,18 @@ namespace GarageApp3p0.Application
                         Console.ResetColor();
                         break;
                 }
+                Console.WriteLine($"{previousCount - filteredVehicles.Count} fordon filtrerades bort.");
+                if (filteredVehicles.Count == 0) exit = true;
             }
-            PrintList(filteredVehicles.GetEnumerator(), true, true);
+
+            if (filteredVehicles.Count == 0) {
+                Console.WriteLine("Inga fordon matchade dina filterkriterier. " +
+                    "Återgår till huvudmenyn.");
+            }
+            else {
+                Console.WriteLine("Dessa fordon matchade dina filterkriterier:");
+                PrintList(filteredVehicles.GetEnumerator(), true, true);
+            }
         }
 
         private static void PrintAdvancedSearchMenu() {
@@ -363,11 +368,11 @@ namespace GarageApp3p0.Application
             Console.WriteLine("Avancerad sökning. Välj alternativ för " +
                 "att filtrera bland garagets fordon:");
             Console.WriteLine("1. Filtrera efter index");
-            Console.WriteLine("2. Sortera efter märke");
-            Console.WriteLine("3. Sortera efter modell");
-            Console.WriteLine("4. Filtrera efter registreringsnummer");
-            Console.WriteLine("5. Sortera efter årtal");
-            Console.WriteLine("6. Sortera efter färg");
+            Console.WriteLine("2. Filtrera efter märke");
+            Console.WriteLine("3. Filtrera efter modell");
+            Console.WriteLine("4. Sök efter registreringsnummer");
+            Console.WriteLine("5. Filtrera efter årtal");
+            Console.WriteLine("6. Filtrera efter färg");
             Console.WriteLine("7. Snegla på listan");
             Console.WriteLine("8. Återgå till huvudmenyn");
             Console.ResetColor();

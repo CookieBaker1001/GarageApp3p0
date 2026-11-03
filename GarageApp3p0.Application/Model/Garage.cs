@@ -39,13 +39,6 @@ namespace GarageApp3p0.Model
             MaxCapacity = capacity;
         }
 
-        private static Regex regNumberRegex = new Regex(@"[A-Z]{3}\d{3}\Z");
-        public static bool IsValidRegistrationNumber(string regNumber)
-        {
-            regNumber = regNumber.ToUpper();
-            return regNumberRegex.IsMatch(regNumber);
-        }
-
         public bool DoesThisVehicleFit(T vehicle) { 
             return (CurrentCapacity + vehicle.ParkingSize) <= MaxCapacity;
         }

@@ -239,11 +239,12 @@ namespace GarageApp3p0.Application
 
         private static void PromptForBoatDetails(out PropulsionType propulsionType)
         {
-            Console.WriteLine("Ange drivmedelstyp (0 = Rodd, 1 = Segel, 2 = Motor).");
+            Console.WriteLine("Ange drivmedelstyp (0 = Rodd, 1 = Segel, 2 = Motor). (1-indexering))");
             Console.Write(">");
             int propulsionTypeInt;
             if (!int.TryParse(Console.ReadLine(), out propulsionTypeInt))
                 throw new ArgumentException("Ogiltig drivmedelstyp.");
+            propulsionTypeInt--; // Konvertera till 0-indexering
             if (propulsionTypeInt < 0 || propulsionTypeInt > 2)
                 throw new ArgumentOutOfRangeException("Ogiltig drivmedelstyp.");
             propulsionType = (PropulsionType)propulsionTypeInt;
@@ -251,11 +252,12 @@ namespace GarageApp3p0.Application
 
         private static void PromptForBusDetails(out EngineType engineType)
         {
-            Console.WriteLine("Ange motortyp (0 = Elektrisk, 1 = Bensin, 2 = Diesel).");
+            Console.WriteLine("Ange motortyp (0 = Elektrisk, 1 = Bensin, 2 = Diesel). (1-indexering))");
             Console.Write(">");
             int engineTypeInt;
             if (!int.TryParse(Console.ReadLine(), out engineTypeInt))
                 throw new ArgumentException("Ogiltig motortyp.");
+            engineTypeInt--; // Konvertera till 0-indexering
             if (engineTypeInt < 0 || engineTypeInt > 2)
                 throw new ArgumentOutOfRangeException("Ogiltig motortyp.");
             engineType = (EngineType)engineTypeInt;

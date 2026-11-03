@@ -6,7 +6,6 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public class Airplane : Vehicle
     {
-        public override int ParkingSize { get; } = 5;
         private int _maxHeight;
         public int MaxHeight { 
             get => _maxHeight;
@@ -31,7 +30,7 @@ namespace GarageApp3p0.Model.Vehicles
         }
         public Airplane(string make, string model, string regNumber, int year,
             int seatCount, string color, int maxHeight, int engineCount) :
-            base(make, model, regNumber, year, seatCount, color)
+            base(make, model, regNumber, year, seatCount, 5, color)
         {
             MaxHeight = maxHeight;
             EngineCount = engineCount;

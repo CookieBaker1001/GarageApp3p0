@@ -1,4 +1,7 @@
 20
-Car;Progen;Emerus;JDI382;2018;2;3;3;
-Motorcycle;Shitzu;Hakucho;AUW273;2015;1;1;1;f
-Car;Dewbauchee;Vagner;KET376;2015;2;3;röd;
+Car;Progen;Emerus;JDI382;2018;2;röd;
+Motorcycle;Shitzu;Hakucho;AUW273;2015;1;blå;f
+Car;Dewbauchee;Vagner;KET376;2015;2;lila;
+Airplane;Flyg;Plan;WDU383;2000;6;blå;1742;2
+Boat;Flyt;Bit;JFU345;1900;5;orange;1
+Motorcycle;Maibatsu;Speeder;JFE487;2010;1;svart;t

@@ -73,7 +73,6 @@ namespace GarageApp3p0.Application.Data
                 sb.Append(v.RegNumber).Append(";");
                 sb.Append(v.Year.ToString()).Append(";");
                 sb.Append(v.SeatCount.ToString()).Append(";");
-                sb.Append(v.ParkingSize.ToString()).Append(";");
                 sb.Append(v.Color).Append(";");
 
                 if (v is Car car)
@@ -86,9 +85,9 @@ namespace GarageApp3p0.Application.Data
                 else if (v is Airplane airplane)
                     sb.Append(airplane.MaxHeight.ToString()).Append(";").Append(airplane.EngineCount.ToString());
                 else if (v is Boat boat)
-                    sb.Append(boat.PropulsionType.ToString());
+                    sb.Append((int)boat.PropulsionType);
                 else if (v is Bus bus)
-                    sb.Append(bus.EngineType.ToString());
+                    sb.Append((int)bus.EngineType);
 
                 lines.Add(sb.ToString());
             }

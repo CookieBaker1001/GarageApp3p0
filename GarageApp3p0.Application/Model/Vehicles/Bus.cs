@@ -7,7 +7,6 @@ namespace GarageApp3p0.Model.Vehicles
 {
     public class Bus : Vehicle
     {
-        public override int ParkingSize { get; } = 8;
         private EngineType _engineType;
         public EngineType EngineType { 
             get => _engineType;
@@ -20,7 +19,7 @@ namespace GarageApp3p0.Model.Vehicles
         }
         public Bus(string make, string model, string regNumber, int year,
             int seatCount, string color, EngineType engineType) :
-            base(make, model, regNumber, year, seatCount, color)
+            base(make, model, regNumber, year, seatCount, 8, color)
         {
             EngineType = engineType;
         }

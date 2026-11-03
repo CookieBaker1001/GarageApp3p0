@@ -28,6 +28,8 @@ namespace GarageApp3p0.Model.Vehicles
                 _engineCount = value;
             }
         }
+        private int _parkingSize = 5;
+        public override int ParkingSize => _parkingSize;
         public Airplane() { }
         public Airplane(string make, string model, string regNumber, int year,
             int seatCount, string color, int maxHeight, int engineCount) :

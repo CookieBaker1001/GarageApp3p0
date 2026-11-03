@@ -18,6 +18,8 @@ namespace GarageApp3p0.Model.Vehicles
                 _propulsionType = value;
             } 
         }
+        private int _parkingSize = 4;
+        public override int ParkingSize => _parkingSize;
         public Boat() { }
         public Boat(string make, string model, string regNumber, int year,
             int seatCount, string color, PropulsionType propulsionType) :

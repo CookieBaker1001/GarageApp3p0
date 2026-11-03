@@ -20,7 +20,7 @@ namespace GarageApp3p0.Model.Vehicles
         }
         public int SeatCount { get; set; }
         // Bil = 3, Motorcykel = 1, Flygplan = 5, Båt = 4, Buss = 8
-        public int ParkingSize { get; private set; }
+        public virtual int ParkingSize { get; private set; }
         public string Color { get; set; } = string.Empty;
 
         public Vehicle() { }

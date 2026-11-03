@@ -61,19 +61,6 @@ namespace GarageApp3p0.Model
             _vehicles.RemoveAt(index);
         }
 
-        public void RemoveVehicle(T vehicle)
-        {
-            _vehicles.Remove(vehicle);
-        }
-
-        public void Print()
-        {
-            foreach (var vehicle in _vehicles)
-            {
-                Console.WriteLine(vehicle.ToString());
-            }
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             return _vehicles.GetEnumerator();
@@ -91,7 +78,7 @@ namespace GarageApp3p0.Model
 
         public bool IsFull()
         {
-            return _vehicles.Count >= MaxCapacity;
+            return CurrentCapacity >= MaxCapacity;
         }
 
         public bool IsEmpty()

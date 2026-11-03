@@ -7,6 +7,8 @@ namespace GarageApp3p0.Model.Vehicles
     public class Car : Vehicle
     {
         public bool HasSunRoof { get; set; }
+        private int _parkingSize = 3;
+        public override int ParkingSize => _parkingSize;
         public Car() { }
         public Car(string make, string model, string regNumber, 
             int year, int seatCount, string color, bool hasSunroof) : 
@@ -18,7 +20,7 @@ namespace GarageApp3p0.Model.Vehicles
         public override string ToString()
         {
             return $"Bil (Storlek: {ParkingSize})\n" + base.ToString() + 
-                $"\nFönstertak?: {HasSunRoof}";
+                $"\nFönstertak?: {(HasSunRoof ? "Ja" : "Nej")}";
         }
     }
 }

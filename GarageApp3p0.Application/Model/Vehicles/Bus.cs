@@ -17,6 +17,8 @@ namespace GarageApp3p0.Model.Vehicles
                 _engineType = value;
             } 
         }
+        private int _parkingSize = 8;
+        public override int ParkingSize => _parkingSize;
         public Bus() { }
         public Bus(string make, string model, string regNumber, int year,
             int seatCount, string color, EngineType engineType) :

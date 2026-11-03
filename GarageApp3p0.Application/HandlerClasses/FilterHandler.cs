@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GarageApp3p0.Application.HelperClasses
 {
-    public static class FilterHelper
+    public static class FilterHandler
     {
         public static List<Vehicle> FilterMake(List<Vehicle> list)
         {
@@ -92,7 +92,7 @@ namespace GarageApp3p0.Application.HelperClasses
             Console.WriteLine("Ange registreringsnummer att filtrera på.");
             string? regNumber;
             while (string.IsNullOrWhiteSpace(regNumber = Console.ReadLine()) 
-                || !RegexHelper.IsValidRegistrationNumber(regNumber))
+                || !RegexHandler.IsValidRegistrationNumber(regNumber))
             {
                 Console.WriteLine("Ogiltigt registreringsnummer. Försök igen.");
             }

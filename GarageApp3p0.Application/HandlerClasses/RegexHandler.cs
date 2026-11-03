@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace GarageApp3p0.Application.HelperClasses
 {
-    public static class RegexHelper
+    public static class RegexHandler
     {
         private static Regex regNumberRegex = new Regex(@"[A-Z]{3}\d{3}\Z");
         public static bool IsValidRegistrationNumber(string regNumber)

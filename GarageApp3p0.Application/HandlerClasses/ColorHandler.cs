@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GarageApp3p0.Application.HelperClasses
 {
-    public static class ColorHelper
+    public static class ColorHandler
     {
         private static HashSet<string> validColors = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -18,9 +18,19 @@ namespace GarageApp3p0.Application.HelperClasses
             return validColors.Contains(color.ToLower());
         }
 
-        public static string[] GetValidColors()
+        public static string GetValidColorsString(int rowCount)
         {
-            return new List<string>(validColors).ToArray();
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            for (int i = 0; i < validColors.Count; i++) { 
+                sb.Append(validColors.ElementAt(i)).Append(" ");
+                count++;
+                if (count == rowCount) {
+                    sb.AppendLine();
+                    count = 0;
+                }
+            }
+            return sb.ToString();
         }
     }
 }

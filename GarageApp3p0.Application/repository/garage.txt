@@ -5,3 +5,4 @@ Car;Dewbauchee;Vagner;KET376;2015;2;lila;
 Airplane;Flyg;Plan;WDU383;2000;6;blå;1742;2
 Boat;Flyt;Bit;JFU345;1900;5;orange;1
 Motorcycle;Maibatsu;Speeder;JFE487;2010;1;svart;t
+Car;Ford;Mustang;ODW856;2000;4;röd;

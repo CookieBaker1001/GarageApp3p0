@@ -12,6 +12,23 @@ namespace GarageApp3p0.Application
 {
     public static class Utilities
     {   
+        private static string MainMenu = 
+            "1. Lägg till fordon\n" +
+            "2. Ta bort fordon\n" +
+            "3. Visa alla fordon\n" +
+            "4. Sök efter fordon\n" +
+            "5. Avsluta";
+
+        private static string AdvancedSearchMenu =
+            "Avancerad sökning. Välj alternativ för " +
+            "att filtrera bland garagets fordon:" +
+            "1. Filtrera efter märke\n" +
+            "2. Filtrera efter modell\n" +
+            "3. Sök efter registreringsnummer\n" +
+            "4. Filtrera efter årtal\n" +
+            "5. Filtrera efter färg\n" +
+            "6. Snegla på listan\n" +
+            "7. Återgå till huvudmenyn";
         public static Garage<Vehicle> StartupSequence()
         {
             string message = 
@@ -27,9 +44,10 @@ namespace GarageApp3p0.Application
             Console.WriteLine("Välkommen till Garage Appen 3.0!\n" +
                 "Här kan du hantera dina fordon i garaget.");
 
-            if (GarageRepository.SaveFileExists()) { 
-                Console.WriteLine("Hittade en sparad garagelista.");
-                Console.WriteLine("Vill du ladda in den? (j/n)");
+            if (GarageRepository.SaveFileExists()) {
+                PromptUser("Hittade en sparad garagelista.\n" +
+                    "Vill du ladda in den? (j/n)", ConsoleColor.Yellow);
+                
                 char input;
                 while (!char.TryParse(Console.ReadLine(), out input))
                 {
@@ -40,8 +58,7 @@ namespace GarageApp3p0.Application
                 }
             }
 
-            Console.WriteLine("Hur stort ska garaget vara?");
-            Console.Write(">");
+            PromptUser("Hur stort ska garaget vara?", ConsoleColor.Yellow);
             int garageSize;
             while (!int.TryParse(Console.ReadLine(), out garageSize) && garageSize <= 0)
             {
@@ -51,22 +68,28 @@ namespace GarageApp3p0.Application
             return garage;
         }
 
-        public static void PrintMainMenu() {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(" -=- Huvudmeny -=-");
-            Console.WriteLine("1. Lägg till fordon");
-            Console.WriteLine("2. Ta bort fordon");
-            Console.WriteLine("3. Visa alla fordon");
-            Console.WriteLine("4. Sök efter fordon");
-            Console.WriteLine("5. Avsluta");
-            Console.ResetColor();
-            Console.Write(">");
+        //public static void PrintMainMenu()
+        //{
+        //    Console.ForegroundColor = ConsoleColor.Yellow;
+        //    Console.WriteLine(" -=- Huvudmeny -=-");
+        //    Console.WriteLine("1. Lägg till fordon");
+        //    Console.WriteLine("2. Ta bort fordon");
+        //    Console.WriteLine("3. Visa alla fordon");
+        //    Console.WriteLine("4. Sök efter fordon");
+        //    Console.WriteLine("5. Avsluta");
+        //    Console.ResetColor();
+        //    Console.Write(">");
+        //}
+
+        public static void PrintMainMenu()
+        {
+            PromptUser(MainMenu, ConsoleColor.Yellow);
         }
 
         public static void RemoveVehicle(Garage<Vehicle> garage) { 
             PrintGarage(garage, true, true);
-            Console.WriteLine("Vilket fordon vill du ta bort? (1-indexering)");
-            Console.Write(">");
+            PromptUser("Vilket fordon vill du ta bort? (1-indexering)", 
+                ConsoleColor.Yellow);
             int index;
 
             if (!int.TryParse(Console.ReadLine(), out index))
@@ -111,11 +134,12 @@ namespace GarageApp3p0.Application
         }
 
         public static Vehicle CreateVehicle(Garage<Vehicle> garage) {
-            Console.WriteLine("Olika fordon tar olika mycket plats i garaget.");
-            Console.WriteLine($"Nuvarande kapacitet: {garage.CurrentCapacity}/{garage.MaxCapacity}");
-            Console.WriteLine("Ange fordonstyp. (Utrymme anges i parentes)");
-            Console.WriteLine("1. Bil(3), 2. Motorcykel(1), 3. Flygplan(5), 4. Båt(4), 5. Buss(8)");
-            Console.Write(">");
+            PromptUser(
+                $"Olika fordon tar olika mycket plats i garaget.\n" +
+                $"Nuvarande kapacitet: {garage.CurrentCapacity}/{garage.MaxCapacity}\n" +
+                $"Ange fordonstyp. (Utrymme anges i parentes)" +
+                $"1. Bil(3), 2. Motorcykel(1), 3. Flygplan(5), 4. Båt(4), 5. Buss(8)",
+                ConsoleColor.Yellow);
             int type;
             if (!int.TryParse(Console.ReadLine(), out type))
                 throw new ArgumentException("Ogiltig fordonstyp.");
@@ -127,20 +151,17 @@ namespace GarageApp3p0.Application
 
         private static Vehicle PromptForVehicleDetails(int type, Garage<Vehicle> garage) {
 
-            Console.WriteLine("Ange märke.");
-            Console.Write(">");
+            PromptUser("Ange märke.", ConsoleColor.Yellow);
             string? make = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(make))
                 throw new ArgumentException("Ogiltigt märke.");
 
-            Console.WriteLine("Ange modell.");
-            Console.Write(">");
+            PromptUser("Ange modell.", ConsoleColor.Yellow);
             string? model = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(model))
                 throw new ArgumentException("Ogiltig modell.");
 
-            Console.WriteLine("Ange registreringsnummer.");
-            Console.Write(">");
+            PromptUser("Ange registreringsnummer.", ConsoleColor.Yellow);
             string? regNumber = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(regNumber))
                 throw new ArgumentException("Ogiltigt registreringsnummer.");
@@ -149,32 +170,33 @@ namespace GarageApp3p0.Application
             if (garage.DoesThisRegNumberAlreadyExist(regNumber))
                 throw new ArgumentException($"Registreringsnumret {regNumber} finns redan i garaget.");
 
-            Console.WriteLine("Ange tillverkningsår.");
-            Console.Write(">");
+            PromptUser("Ange tillverkningsår.", ConsoleColor.Yellow);
             int year;
             if (!int.TryParse(Console.ReadLine(), out year))
                 throw new ArgumentException("Inmatningsfel.");
 
-            Console.WriteLine("Ange antal sätten.");
-            Console.Write(">");
+            PromptUser("Ange antal sätten.", ConsoleColor.Yellow);
             int seatCount;
             if (!int.TryParse(Console.ReadLine(), out seatCount))
                 throw new ArgumentException("Inmatningsfel.");
 
-            Console.WriteLine("Ange färg.");
-            int count = 0;
-            string[] colors = ColorHelper.GetValidColors();
-            foreach (string c in colors)
-            {
-                Console.Write($"{c} ");
-                count++;
-                if (count == 5) {
-                    Console.WriteLine();
-                    count = 0;
-                }
-            }
-            Console.WriteLine();
-            Console.Write(">");
+            PromptUser($"Ange färg.\n{ColorHelper.GetValidColors()}", ConsoleColor.Yellow);
+            //Console.ForegroundColor = ConsoleColor.Yellow;
+            //Console.WriteLine("Ange färg.");
+            //int count = 0;
+            //string[] colors = ColorHelper.GetValidColors();
+            //foreach (string c in colors)
+            //{
+            //    Console.Write($"{c} ");
+            //    count++;
+            //    if (count == 5) {
+            //        Console.WriteLine();
+            //        count = 0;
+            //    }
+            //}
+            //Console.WriteLine();
+            //Console.ResetColor();
+            //Console.Write(">");
             string? color = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(color))
                 throw new ArgumentException("Ogiltig färg.");
@@ -207,8 +229,7 @@ namespace GarageApp3p0.Application
 
         private static void PromptForMotorcycleDetails(out bool hasSidecar)
         {
-            Console.WriteLine("Har motorcykeln sidovagn? (j/n)");
-            Console.Write(">");
+            PromptUser("Har motorcykeln sidovagn? (j/n)", ConsoleColor.Yellow);
             char input;
             if (!char.TryParse(Console.ReadLine(), out input))
                 throw new ArgumentException("Inmatningsfel.");
@@ -223,15 +244,13 @@ namespace GarageApp3p0.Application
 
         private static void PromptForAirplaneDetails(out int maxHeight, out int engineCount)
         {
-            Console.WriteLine("Ange planets maxhöjd.");
-            Console.Write(">");
+            PromptUser("Ange planets maxhöjd.", ConsoleColor.Yellow);
             int seatCount;
             if (!int.TryParse(Console.ReadLine(), out seatCount))
                 throw new ArgumentException("Inmatningsfel.");
             maxHeight = seatCount;
 
-            Console.WriteLine("Ange antal motorer.");
-            Console.Write(">");
+            PromptUser("Ange antal motorer.", ConsoleColor.Yellow);
             if (!int.TryParse(Console.ReadLine(), out seatCount))
                 throw new ArgumentException("Inmatningsfel.");
             engineCount = seatCount;
@@ -239,8 +258,7 @@ namespace GarageApp3p0.Application
 
         private static void PromptForBoatDetails(out PropulsionType propulsionType)
         {
-            Console.WriteLine("Ange drivmedelstyp (0 = Rodd, 1 = Segel, 2 = Motor). (1-indexering))");
-            Console.Write(">");
+            PromptUser("Ange drivmedelstyp (1 = Rodd, 2 = Segel, 3 = Motor). (1-indexering))", ConsoleColor.Yellow);
             int propulsionTypeInt;
             if (!int.TryParse(Console.ReadLine(), out propulsionTypeInt))
                 throw new ArgumentException("Ogiltig drivmedelstyp.");
@@ -252,8 +270,7 @@ namespace GarageApp3p0.Application
 
         private static void PromptForBusDetails(out EngineType engineType)
         {
-            Console.WriteLine("Ange motortyp (0 = Elektrisk, 1 = Bensin, 2 = Diesel). (1-indexering))");
-            Console.Write(">");
+            PromptUser("Ange motortyp (1 = Bensin, 2 = Diesel, 3 = Elektrisk). (1-indexering))", ConsoleColor.Yellow);
             int engineTypeInt;
             if (!int.TryParse(Console.ReadLine(), out engineTypeInt))
                 throw new ArgumentException("Ogiltig motortyp.");
@@ -265,8 +282,7 @@ namespace GarageApp3p0.Application
 
         public static void SaveGarage(Garage<Vehicle> garage)
         {
-            Console.WriteLine("Vill du spara garaget innan programmet avslutas? (j/n)");
-            Console.Write(">");
+            PromptUser("Vill du spara garaget innan programmet avslutas? (j/n)", ConsoleColor.Yellow);
             char input;
             if (!char.TryParse(Console.ReadLine(), out input))
                 throw new ArgumentException("Inmatningsfel.");
@@ -304,8 +320,7 @@ namespace GarageApp3p0.Application
             int previousCount;
             while (!exit) {
                 previousCount = filteredVehicles.Count;
-                PrintAdvancedSearchMenu();
-                Console.Write(">");
+                PromptUser(AdvancedSearchMenu, ConsoleColor.Yellow);
                 input = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input)) {
                     Console.WriteLine("Inmatningsfel. Försök igen.");
@@ -314,34 +329,30 @@ namespace GarageApp3p0.Application
 
                 switch (input.ToLower()) {
                     case "1":
-                        // Ej implementerat ännu.
-                        //FilterHelperClass.FilterIndex(vehicles);
-                        break;
-                    case "2":
                         // Sort by make
                         filteredVehicles = FilterHelper.FilterMake(filteredVehicles);
                         break;
-                    case "3":
+                    case "2":
                         // Sort by model
                         filteredVehicles = FilterHelper.FilterModel(filteredVehicles);
                         break;
-                    case "4":
+                    case "3":
                         // Search by regnumber
                         filteredVehicles = FilterHelper.FilterRegNumber(filteredVehicles);
                         break;
-                    case "5":
+                    case "4":
                         // Sort by year
                         filteredVehicles= FilterHelper.FilterYear(filteredVehicles);
                         break;
-                    case "6":
+                    case "5":
                         // Sort by color
                         filteredVehicles = FilterHelper.FilterColor(filteredVehicles);
                         break;
-                    case "7":
+                    case "6":
                         // View the list
                         PrintList(filteredVehicles.GetEnumerator(), true, true);
                         break;
-                    case "8":
+                    case "7":
                         // Done with advanced search, return to main menu
                         exit = true;
                         break;
@@ -365,19 +376,25 @@ namespace GarageApp3p0.Application
             }
         }
 
-        private static void PrintAdvancedSearchMenu() {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Avancerad sökning. Välj alternativ för " +
-                "att filtrera bland garagets fordon:");
-            Console.WriteLine("1. Filtrera efter index");
-            Console.WriteLine("2. Filtrera efter märke");
-            Console.WriteLine("3. Filtrera efter modell");
-            Console.WriteLine("4. Sök efter registreringsnummer");
-            Console.WriteLine("5. Filtrera efter årtal");
-            Console.WriteLine("6. Filtrera efter färg");
-            Console.WriteLine("7. Snegla på listan");
-            Console.WriteLine("8. Återgå till huvudmenyn");
+        //private static void PrintAdvancedSearchMenu() {
+        //    Console.ForegroundColor = ConsoleColor.Yellow;
+        //    Console.WriteLine("Avancerad sökning. Välj alternativ för " +
+        //        "att filtrera bland garagets fordon:");
+        //    Console.WriteLine("1. Filtrera efter märke");
+        //    Console.WriteLine("2. Filtrera efter modell");
+        //    Console.WriteLine("3. Sök efter registreringsnummer");
+        //    Console.WriteLine("4. Filtrera efter årtal");
+        //    Console.WriteLine("5. Filtrera efter färg");
+        //    Console.WriteLine("6. Snegla på listan");
+        //    Console.WriteLine("7. Återgå till huvudmenyn");
+        //    Console.ResetColor();
+        //}
+
+        private static void PromptUser(string message, ConsoleColor color) {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
             Console.ResetColor();
+            Console.Write(">");
         }
     }
 }

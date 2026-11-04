@@ -12,8 +12,9 @@ namespace GarageApp3p0.Application.HandlerClasses
             "2. Ta bort fordon\n" +
             "3. Visa alla fordon (Hög detalj)\n" +
             "4. Visa alla fordon (Låg detalj)\n" +
-            "5. Sök efter fordon\n" +
-            "6. Avsluta";
+            "5. Visa alla fordonstyper\n" +
+            "6. Sök efter fordon\n" +
+            "7. Avsluta";
 
         private const string AdvancedSearchMenu =
             "Avancerad sökning: Välj alternativ för " +

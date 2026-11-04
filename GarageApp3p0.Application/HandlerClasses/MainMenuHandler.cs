@@ -45,6 +45,9 @@ namespace GarageApp3p0.Application.HandlerClasses
                         TryToShowVehicles(garage, true);
                         break;
                     case 5:
+                        TryToShowVehicleTypes(garage);
+                        break;
+                    case 6:
                         TryToPerformAdvancedSearch(garage);
                         break;
                     default:
@@ -54,6 +57,32 @@ namespace GarageApp3p0.Application.HandlerClasses
             }
 
             if (!garage.IsEmpty()) Utilities.SaveGarage(garage);
+        }
+
+        private static void TryToShowVehicleTypes(Garage<Vehicle> garage)
+        {
+            try
+            {
+                Utilities.PrintVehicleTypes(garage);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Ogiltig operation: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Nyckelfel: {ex.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Generellt fel: {ex.Message}");
+                Console.ResetColor();
+            }
         }
 
         private static void TryToPerformAdvancedSearch(Garage<Vehicle> garage)

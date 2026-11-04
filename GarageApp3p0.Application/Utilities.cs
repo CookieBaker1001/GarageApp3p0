@@ -106,6 +106,34 @@ namespace GarageApp3p0.Application
             Console.ResetColor();
         }
 
+        public static void PrintVehicleTypes(Garage<Vehicle> garage) { 
+            if (garage.IsEmpty())
+                throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
+            
+            IEnumerator<Vehicle> enumerator = garage.GetEnumerator();
+            Dictionary<string, int> typeFreq = new Dictionary<string, int>();
+            typeFreq.Add("Bil", 0);
+            typeFreq.Add("Motorcykel", 0);
+            typeFreq.Add("Flygplan", 0);
+            typeFreq.Add("Båt", 0);
+            typeFreq.Add("Buss", 0);
+            while (enumerator.MoveNext())
+            {
+                Vehicle current = enumerator.Current;
+                typeFreq[Translations.VehicleTypes[current.GetType().Name]] += 1;
+            }
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("Fordonstyper i garaget:");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("---------");
+            foreach (var entry in typeFreq)
+            {
+                Console.WriteLine($"{entry.Key}: {entry.Value}");
+            }
+            Console.WriteLine("---------");
+            Console.ResetColor();
+        }
+
         public static void PrintGarage(Garage<Vehicle> garage, bool showLowDetails, bool showIndex)
         {
             if (garage.IsEmpty())

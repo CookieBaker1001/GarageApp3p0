@@ -40,13 +40,13 @@ namespace GarageApp3p0.Application.HandlerClasses
         }
 
         // Hjälpmetod för att skriva ut huvudmenyn och be om användarens val.
-        public static void PromptUserMainMenu()
+        public static void AskUserMainMenu()
         {
             AskUser(MainMenu, ConsoleColor.Yellow);
         }
 
         // Hjälpmetod för att skriva ut avancerad sökmeny och be om användarens val.
-        public static void PromptUserAdvancedSearchMenu()
+        public static void AskUserAdvancedSearchMenu()
         {
             AskUser(AdvancedSearchMenu, ConsoleColor.Yellow);
         }

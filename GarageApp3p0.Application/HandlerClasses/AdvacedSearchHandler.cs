@@ -21,7 +21,7 @@ namespace GarageApp3p0.Application.HelperClasses
             while (!exit)
             {
                 previousCount = filteredVehicles.Count;
-                PromptHandler.PromptUserAdvancedSearchMenu();
+                PromptHandler.AskUserAdvancedSearchMenu();
                 input = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
                 {
@@ -65,7 +65,13 @@ namespace GarageApp3p0.Application.HelperClasses
                         Console.ResetColor();
                         break;
                 }
-                Console.WriteLine($"{previousCount - filteredVehicles.Count} fordon filtrerades bort.");
+                int removed = previousCount - filteredVehicles.Count;
+                if (removed > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{removed} fordon filtrerades bort.");
+                    Console.ResetColor();
+                }
                 if (filteredVehicles.Count == 0) exit = true;
             }
 

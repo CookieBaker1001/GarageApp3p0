@@ -21,7 +21,7 @@ namespace GarageApp3p0.Application.HandlerClasses
 
             while (!exit)
             {
-                PromptHandler.PromptUserMainMenu();
+                PromptHandler.AskUserMainMenu();
                 input = Console.ReadLine();
                 if (string.IsNullOrEmpty(input)
                     || !int.TryParse(input, out choice))

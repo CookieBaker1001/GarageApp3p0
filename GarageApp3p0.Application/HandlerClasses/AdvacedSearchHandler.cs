@@ -7,8 +7,11 @@ using System.Text;
 
 namespace GarageApp3p0.Application.HelperClasses
 {
+    // Hjälpklass för att hantera avancerad sökning i garaget. Denna klass
+    // innehåller metoder för att filtrera fordon baserat på fordonsegenskaperna.
     public static class AdvacedSearchHandler
     {
+        // Hjälpmetod för söknings loopen och hantering av användarens val.
         public static void PerformAdvancedSearch(Garage<Vehicle> garage)
         {
             bool exit = false;
@@ -29,31 +32,31 @@ namespace GarageApp3p0.Application.HelperClasses
                 switch (input.ToLower())
                 {
                     case "1":
-                        // Sort by make
+                        // Filtrera efter märke
                         filteredVehicles = FilterHandler.FilterMake(filteredVehicles);
                         break;
                     case "2":
-                        // Sort by model
+                        // Filtrera efter modell
                         filteredVehicles = FilterHandler.FilterModel(filteredVehicles);
                         break;
                     case "3":
-                        // Search by regnumber
+                        // Sök efter registreringsnummer
                         filteredVehicles = FilterHandler.FilterRegNumber(filteredVehicles);
                         break;
                     case "4":
-                        // Sort by year
+                        // Filtrera efter år
                         filteredVehicles = FilterHandler.FilterYear(filteredVehicles);
                         break;
                     case "5":
-                        // Sort by color
+                        // Filtrera efter färg
                         filteredVehicles = FilterHandler.FilterColor(filteredVehicles);
                         break;
                     case "6":
-                        // View the list
+                        // Kika på filtrerade fordon
                         Utilities.PrintGarageContent(filteredVehicles.GetEnumerator(), true, true);
                         break;
                     case "7":
-                        // Done with advanced search, return to main menu
+                        // Klar, returnerar till huvudmenyn
                         exit = true;
                         break;
                     default:

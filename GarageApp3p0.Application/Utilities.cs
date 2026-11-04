@@ -13,8 +13,9 @@ using System.Text;
 namespace GarageApp3p0.Application
 {
     public static class Utilities
-    {   
-        
+    {
+        // Körs vid programstart, hanterar inläsning av garage från fil
+        // eller skapande av nytt garage
         public static Garage<Vehicle> StartupSequence()
         {
             string message = 
@@ -70,6 +71,7 @@ namespace GarageApp3p0.Application
             return garage;
         }
 
+        // Hanterar borttagning av fordon från garaget
         public static void RemoveVehicle(Garage<Vehicle> garage) { 
             PrintGarage(garage, true, true);
             PromptHandler.AskUser("Vilket fordon vill du ta bort? (1-indexering)", 
@@ -86,6 +88,7 @@ namespace GarageApp3p0.Application
             Console.ResetColor();
         }
 
+        // Tar en form av samling av fordon och skriver ut dem i konsolen
         public static void PrintGarageContent(IEnumerator<Vehicle> enumerator, bool showLowDetails, bool showIndex)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -106,6 +109,8 @@ namespace GarageApp3p0.Application
             Console.ResetColor();
         }
 
+        // Tar ett garage av typ Vehicle och skriver ut dess innehåll i konsolen
+        // Räknar antalet fordon av varje typ och skriver ut det
         public static void PrintVehicleTypes(Garage<Vehicle> garage) { 
             if (garage.IsEmpty())
                 throw new InvalidOperationException("Garaget är tomt. Inget att visa.");
@@ -134,6 +139,8 @@ namespace GarageApp3p0.Application
             Console.ResetColor();
         }
 
+        // Förbereder utskrivning av ett garage
+        // Skriver ut dess innehåll i konsolen
         public static void PrintGarage(Garage<Vehicle> garage, bool showLowDetails, bool showIndex)
         {
             if (garage.IsEmpty())
@@ -144,6 +151,7 @@ namespace GarageApp3p0.Application
             PrintGarageContent(garage.GetEnumerator(), showLowDetails, showIndex);
         }
 
+        // Tar in ett garage och förbereder skapelsen av ett nytt fordon
         public static Vehicle CreateVehicle(Garage<Vehicle> garage) {
             PromptHandler.AskUser(
                 "Olika fordon tar olika mycket plats i garaget.\n" +
@@ -160,6 +168,8 @@ namespace GarageApp3p0.Application
             return PromptForVehicleDetails(type, garage);
         }
 
+        // Frågar användaren efter detaljer för det nya fordonet
+        // och returnerar ett nytt fordon av rätt typ
         private static Vehicle PromptForVehicleDetails(int type, Garage<Vehicle> garage) {
 
             PromptHandler.AskUser("Ange märke.", ConsoleColor.Yellow);
@@ -224,6 +234,7 @@ namespace GarageApp3p0.Application
             return vehicle;
         }
 
+        // Frågar användaren efter bilspecifika detaljer
         private static void PromptForCarDetails(out bool hasSunRoof)
         {
             PromptHandler.AskUser("Har bilen soltak? (j/n)", ConsoleColor.Yellow);
@@ -239,6 +250,7 @@ namespace GarageApp3p0.Application
                 throw new ArgumentException("Ogiltigt värde.");
         }
 
+        // Frågar användaren efter motorcykelspecifika detaljer
         private static void PromptForMotorcycleDetails(out bool hasSidecar)
         {
             PromptHandler.AskUser("Har motorcykeln sidovagn? (j/n)", ConsoleColor.Yellow);
@@ -254,6 +266,7 @@ namespace GarageApp3p0.Application
                 throw new ArgumentException("Ogiltigt värde.");
         }
 
+        // Frågar användaren efter flygplanspecifika detaljer
         private static void PromptForAirplaneDetails(out int maxHeight, out int engineCount)
         {
             PromptHandler.AskUser("Ange planets maxhöjd.", ConsoleColor.Yellow);
@@ -268,6 +281,7 @@ namespace GarageApp3p0.Application
             engineCount = seatCount;
         }
 
+        // Frågar användaren efter båtspecifika detaljer
         private static void PromptForBoatDetails(out PropulsionType propulsionType)
         {
             PromptHandler.AskUser("Ange drivmedelstyp (1 = Rodd, 2 = Segel, 3 = Motor). (1-indexering))", ConsoleColor.Yellow);
@@ -280,6 +294,7 @@ namespace GarageApp3p0.Application
             propulsionType = (PropulsionType)propulsionTypeInt;
         }
 
+        // Frågar användaren efter busspecifika detaljer
         private static void PromptForBusDetails(out EngineType engineType)
         {
             PromptHandler.AskUser("Ange motortyp (1 = Bensin, 2 = Diesel, 3 = Elektrisk). (1-indexering)", ConsoleColor.Yellow);
@@ -292,6 +307,8 @@ namespace GarageApp3p0.Application
             engineType = (EngineType)engineTypeInt;
         }
 
+        // Sparar garaget till en textfil
+        // Kallar på GarageRepository.SaveGarage() för att göra själva sparandet
         public static void SaveGarage(Garage<Vehicle> garage)
         {
             PromptHandler.AskUser("Vill du spara garaget innan programmet avslutas? (j/n)", ConsoleColor.Yellow);
@@ -324,7 +341,5 @@ namespace GarageApp3p0.Application
                 Console.ResetColor();
             }
         }
-
-        
     }
 }

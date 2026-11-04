@@ -7,8 +7,10 @@ using System.Text;
 
 namespace GarageApp3p0.Application.HandlerClasses
 {
+    // Hjälpklass som hanterar huvudmenyns loop och användarens val.
     public static class MainMenuHandler
     {
+        // Hjälpmetod som kör huvudmenyns loop och hanterar användarens val.
         public static void RunMainMenu()
         {
             Garage<Vehicle> garage = Utilities.StartupSequence();
@@ -59,6 +61,8 @@ namespace GarageApp3p0.Application.HandlerClasses
             if (!garage.IsEmpty()) Utilities.SaveGarage(garage);
         }
 
+        // Metod som försöker visa antalet fordon i garaget av varje
+        // fordonstyp och hanterar eventuella undantag.
         private static void TryToShowVehicleTypes(Garage<Vehicle> garage)
         {
             try
@@ -85,6 +89,8 @@ namespace GarageApp3p0.Application.HandlerClasses
             }
         }
 
+        // Metod som försöker utföra en avancerad sökning och hanterar
+        // eventuella undantag.
         private static void TryToPerformAdvancedSearch(Garage<Vehicle> garage)
         {
             try
@@ -105,6 +111,8 @@ namespace GarageApp3p0.Application.HandlerClasses
             }
         }
 
+        // Metod som försöker ta bort ett fordon och hanterar eventuella
+        // undantag.
         private static void TryToRemoveVehicle(Garage<Vehicle> garage)
         {
             try
@@ -119,6 +127,8 @@ namespace GarageApp3p0.Application.HandlerClasses
             }
         }
 
+        // Metod som försöker lägga till ett fordon och hanterar eventuella
+        // undantag.
         private static void TryToAddVehicle(Garage<Vehicle> garage)
         {
             try
@@ -150,6 +160,8 @@ namespace GarageApp3p0.Application.HandlerClasses
             }
         }
 
+        // Metod som försöker visa fordonen i garaget och hanterar eventuella
+        // undantag, med anseende på detaljnivån.
         private static void TryToShowVehicles(Garage<Vehicle> garage, bool showLowDetail)
         {
             try

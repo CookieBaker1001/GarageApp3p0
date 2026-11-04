@@ -1,4 +1,5 @@
-﻿using GarageApp3p0.Model;
+﻿using GarageApp3p0.Application.HandlerClasses;
+using GarageApp3p0.Model;
 using GarageApp3p0.Model.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using System.Text;
 
 namespace GarageApp3p0.Application.HelperClasses
 {
+    // Hjälpklass för att filtrera listor av fordon baserat på fordonens
+    // egenskaper som märke, modell, registreringsnummer, årtal och färg.
     public static class FilterHandler
     {
         public static List<Vehicle> FilterMake(List<Vehicle> list)
@@ -17,7 +20,7 @@ namespace GarageApp3p0.Application.HelperClasses
 
         private static string GetMake()
         {
-            Console.WriteLine("Ange märke att filtrera på.");
+            PromptHandler.AskUser("Ange märke att filtrera på.");
             string? brand;
             while (string.IsNullOrWhiteSpace(brand = Console.ReadLine()))
             {
@@ -35,13 +38,25 @@ namespace GarageApp3p0.Application.HelperClasses
 
         private static string GetModel()
         {
-            Console.WriteLine("Ange model att filtrera på.");
+            PromptHandler.AskUser("Ange modell att filtrera på.");
             string? model;
             while (string.IsNullOrWhiteSpace(model = Console.ReadLine()))
             {
                 Console.WriteLine("Ogiltig model. Försök igen.");
             }
             return model;
+        }
+
+        private static string GetRegNumber()
+        {
+            PromptHandler.AskUser("Ange registreringsnummer att filtrera på.");
+            string? regNumber;
+            while (string.IsNullOrWhiteSpace(regNumber = Console.ReadLine())
+                || !RegexHandler.IsValidRegistrationNumber(regNumber))
+            {
+                Console.WriteLine("Ogiltigt registreringsnummer. Försök igen.");
+            }
+            return regNumber.ToUpper();
         }
 
         public static List<Vehicle> FilterYear(List<Vehicle> list)
@@ -53,7 +68,7 @@ namespace GarageApp3p0.Application.HelperClasses
 
         private static int GetYear()
         {
-            Console.WriteLine("Ange årtal att filtrera på.");
+            PromptHandler.AskUser("Ange årtal att filtrera på.");
             int year;
             while (!int.TryParse(Console.ReadLine(), out year))
             {
@@ -71,7 +86,7 @@ namespace GarageApp3p0.Application.HelperClasses
 
         private static string GetColor()
         {
-            Console.WriteLine("Ange färg att filtrera på.");
+            PromptHandler.AskUser("Ange färg att filtrera på.");
             string? color;
             while (string.IsNullOrWhiteSpace(color = Console.ReadLine()))
             {
@@ -87,16 +102,6 @@ namespace GarageApp3p0.Application.HelperClasses
             return newList;
         }
 
-        private static string GetRegNumber()
-        {
-            Console.WriteLine("Ange registreringsnummer att filtrera på.");
-            string? regNumber;
-            while (string.IsNullOrWhiteSpace(regNumber = Console.ReadLine()) 
-                || !RegexHandler.IsValidRegistrationNumber(regNumber))
-            {
-                Console.WriteLine("Ogiltigt registreringsnummer. Försök igen.");
-            }
-            return regNumber.ToUpper();
-        }
+        
     }
 }

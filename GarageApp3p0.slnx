@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
   <Project Path="GarageApp3p0.Application/GarageApp3p0.Application.csproj" Id="63fde625-ae03-41c4-9c4b-7eb63c616fca" />
   <Project Path="GarageApp3p0.Tests/GarageApp3p0.Tests.csproj" />
 </Solution>
